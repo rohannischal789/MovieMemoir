@@ -12,10 +12,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.mymoviememoir.networkconnection.NetworkConnection;
+import com.example.mymoviememoir.utilities.Util;
 
-import java.math.BigInteger;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 
 public class SignInActivity extends AppCompatActivity {
     NetworkConnection networkConnection=null;
@@ -38,7 +36,11 @@ public class SignInActivity extends AppCompatActivity {
                 String username = etUsername.getText().toString();
                 String password = etPass.getText().toString();
                 if (!username.isEmpty() && !password.isEmpty()) {
-                    verifyUserTask.execute(username,getMd5(password));
+                    verifyUserTask.execute(username, Util.getMd5(password));
+                }
+                else
+                {
+                    Toast.makeText(getApplicationContext(),"Please enter username and password",Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -53,35 +55,6 @@ public class SignInActivity extends AppCompatActivity {
             }
         });
 
-
-    }
-
-    public static String getMd5(String input)
-    {
-        try {
-
-            // Static getInstance method is called with hashing MD5
-            MessageDigest md = MessageDigest.getInstance("MD5");
-
-            // digest() method is called to calculate message digest
-            //  of an input digest() return array of byte
-            byte[] messageDigest = md.digest(input.getBytes());
-
-            // Convert byte array into signum representation
-            BigInteger no = new BigInteger(1, messageDigest);
-
-            // Convert message digest into hex value
-            String hashtext = no.toString(16);
-            while (hashtext.length() < 32) {
-                hashtext = "0" + hashtext;
-            }
-            return hashtext;
-        }
-
-        // For specifying wrong message digest algorithms
-        catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException(e);
-        }
     }
 
     private class getUserByUserName extends AsyncTask<String, Void, String> {
@@ -93,9 +66,18 @@ public class SignInActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(String details) {
-            TextView resultTextView = findViewById(R.id.tvCheck);
-            resultTextView.setText(details);
-            Toast.makeText(getApplicationContext(),"Post Execute",Toast.LENGTH_SHORT).show();
+
+            try{
+                int num = Integer.parseInt(details);
+                Toast.makeText(getApplicationContext(), "Login successful" ,Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(SignInActivity.this, MainActivity.class);
+                startActivity(intent);
+            } catch (NumberFormatException e) {
+                Toast.makeText(getApplicationContext(), details ,Toast.LENGTH_SHORT).show();
+            }
+            //TextView resultTextView = findViewById(R.id.tvCheck);
+            //resultTextView.setText(details);
+            //Todo: save in shared preferences if all good
         }
     }
 }

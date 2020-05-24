@@ -4,7 +4,7 @@ public class Credential {
     private Integer credentialid;
     private String username;
     private String passwordhash;
-    private Person person;
+    private Person personid;
 
     public Credential(Integer credentialid, String username, String passwordhash) {
         this.credentialid = credentialid;
@@ -37,10 +37,15 @@ public class Credential {
     }
 
     public Person getPerson() {
-        return person;
+        return personid;
     }
 
     public void setPerson(Person person) {
-        this.person = person;
+        this.personid = person;
+    }
+
+    public void setPersonID(int personID) {
+        this.personid = new Person();
+        personid.setPersonid(personID);
     }
 }

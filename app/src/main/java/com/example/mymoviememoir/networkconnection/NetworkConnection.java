@@ -4,12 +4,18 @@ import android.util.Log;
 
 import com.example.mymoviememoir.SignInActivity;
 import com.example.mymoviememoir.entity.Credential;
+import com.example.mymoviememoir.entity.Person;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
@@ -73,16 +79,59 @@ public class NetworkConnection {
         return results;
     }
 
-    public String addPerson(String[] details) {
-        Credential student = new Credential(Integer.parseInt(details[0]), details[1],details[2]);
-        student.setCredentialid(Integer.parseInt(details[3]));
-        Gson gson = new Gson();
-        String studentJson = gson.toJson(student);
+    public int getMaxPersonID(){
+        final String methodPath = "restmovie.person/getMaxPersonID/" ;
+        Request.Builder builder = new Request.Builder();
+        builder.url(BASE_URL + methodPath);
+        Request request = builder.build();
+        int num = 0;
+        JSONArray array = new JSONArray();
+        try {
+            Response response = client.newCall(request).execute();
+            results=response.body().string();
+            num = Integer.parseInt(results);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return num;
+    }
+
+    public int getMaxCredID(){
+        final String methodPath = "restmovie.credential/getMaxCredentialID/" ;
+        Request.Builder builder = new Request.Builder();
+        builder.url(BASE_URL + methodPath);
+        Request request = builder.build();
+        int num = 0;
+        JSONArray array = new JSONArray();
+        try {
+            Response response = client.newCall(request).execute();
+            results=response.body().string();
+            num = Integer.parseInt(results);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return num;
+    }
+
+    public String addPerson(String firstName,String surname,String gender,String birthday,String address,String state,String postcode,String username,String password) {
+        int maxPersonID = getMaxPersonID();
+
+        Date dob = null;
+        try {
+            dob = new SimpleDateFormat("dd/MM/yyyy").parse(birthday);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        Person person = new Person(maxPersonID,firstName,surname,gender,dob,address,state,postcode);
+        Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss").create();
+        //RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint(API_BASE_URL).setConverter(new GsonConverter.create(gson)).build();
+        //Gson gson = new Gson();
+        String personJson = gson.toJson(person);
         String strResponse="";
-//this is for testing, you can check how the json looks like in Logcat
-        Log.i("json " , studentJson);
-        final String methodPath = "student.student/";
-        RequestBody body = RequestBody.create(studentJson, JSON);
+        //this is for testing, you can check how the json looks like in Logcat
+        Log.i("json " , personJson);
+        final String methodPath = "restmovie.person/";
+        RequestBody body = RequestBody.create(personJson, JSON);
         Request request = new Request.Builder()
                 .url(BASE_URL + methodPath)
                 .post(body)
@@ -92,20 +141,26 @@ public class NetworkConnection {
             strResponse= response.body().string();
         } catch (Exception e) {
             e.printStackTrace();
+            Log.i("excep " , e.toString());
         }
-        return strResponse;
+        Log.i("strResponse " , strResponse);
+
+        addCredential(username,password,maxPersonID);
+
+        return String.valueOf(maxPersonID);
     }
 
-    public String addCredential(String[] details) {
-        Credential student = new Credential(Integer.parseInt(details[0]), details[1],details[2]);
-        student.setCredentialid(Integer.parseInt(details[3]));
+    public String addCredential(String username,String password, int personid) {
+        int maxCredID = getMaxCredID();
+        Credential cred = new Credential(maxCredID, username,password);
+        cred.setPersonID(personid);
         Gson gson = new Gson();
-        String studentJson = gson.toJson(student);
+        String credJson = gson.toJson(cred);
         String strResponse="";
-//this is for testing, you can check how the json looks like in Logcat
-        Log.i("json " , studentJson);
-        final String methodPath = "student.student/";
-        RequestBody body = RequestBody.create(studentJson, JSON);
+        //this is for testing, you can check how the json looks like in Logcat
+        Log.i("json " , credJson);
+        final String methodPath = "restmovie.credential/";
+        RequestBody body = RequestBody.create(credJson, JSON);
         Request request = new Request.Builder()
                 .url(BASE_URL + methodPath)
                 .post(body)

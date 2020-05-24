@@ -23,6 +23,10 @@ public class Person {
         this.postcode = postcode;
     }
 
+    public Person() {
+
+    }
+
     public Integer getPersonid() {
         return personid;
     }
