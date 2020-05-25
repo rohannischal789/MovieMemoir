@@ -5,8 +5,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.method.HideReturnsTransformationMethod;
+import android.text.method.PasswordTransformationMethod;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -17,6 +21,7 @@ import com.example.mymoviememoir.utilities.Util;
 
 public class SignInActivity extends AppCompatActivity {
     NetworkConnection networkConnection=null;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +60,23 @@ public class SignInActivity extends AppCompatActivity {
             }
         });
 
+        CheckBox checkBox = findViewById( R.id.checkBox );
+        checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener()
+        {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked)
+            {
+                if (isChecked)
+                {
+                    etPass.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
+                }
+                else
+                {
+                    etPass.setTransformationMethod(PasswordTransformationMethod.getInstance());
+                }
+
+            }
+        });
     }
 
     private class getUserByUserName extends AsyncTask<String, Void, String> {

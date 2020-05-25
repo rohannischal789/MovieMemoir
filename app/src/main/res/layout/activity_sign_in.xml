@@ -6,7 +6,7 @@
         android:id="@+id/tvAppName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="150dp"
+        android:layout_marginTop="120dp"
         android:text="My Movie Memoir"
         android:textSize="35dp"
         android:textStyle="bold"
@@ -38,11 +38,19 @@
         android:inputType="textPassword"
         android:ems="10" />
 
+
+    <CheckBox
+        android:id="@+id/checkBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="100dp"
+        android:text="Show Password" />
+
     <Button
         android:id="@+id/btnLogin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="10dp"
         android:text="Login"
         android:layout_gravity="center"/>
 

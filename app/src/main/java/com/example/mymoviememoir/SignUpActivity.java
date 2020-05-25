@@ -31,16 +31,6 @@ public class SignUpActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
         networkConnection=new NetworkConnection();
-        Button btnBack = findViewById(R.id.btnBack);
-        btnBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(SignUpActivity.this,
-                        SignInActivity.class);
-                startActivity(intent);
-            }
-        });
-
 
         EditText edittext= (EditText) findViewById(R.id.etBirthday);
         final DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
@@ -81,12 +71,12 @@ public class SignUpActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
+                String username = etUsername1.getText().toString();
                 String firstName = etFirstName.getText().toString();
                 String surname = etSurname.getText().toString();
                 String birthday = etBirthday.getText().toString();
                 String address = etAddress.getText().toString();
                 String postcode = etPostcode.getText().toString();
-                String username = etUsername1.getText().toString();
                 String password = etPassword.getText().toString();
                 String state = sState.getSelectedItem().toString();
                 int selectedId = radioGroup.getCheckedRadioButtonId();

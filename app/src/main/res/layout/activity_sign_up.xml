@@ -20,6 +20,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="100dp"
+        android:maxLength="30"
         android:layout_marginTop="40dp"
         android:text="First Name"/>
     <EditText
@@ -33,6 +34,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Surname"
+        android:maxLength="30"
         android:layout_marginLeft="100dp" />
     <EditText
         android:id="@+id/etSurname"
@@ -93,23 +95,27 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="100dp"
+        android:maxLength="100"
         android:ems="10"/>
     <TextView
         android:id="@+id/tvState"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="100dp"
+        android:layout_marginTop="5dp"
         android:text="State"/>
     <Spinner
         android:id="@+id/stateSpinner"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:layout_marginLeft="100dp"
+        android:layout_marginTop="5dp"
         android:entries="@array/state_array"/>
     <TextView
         android:id="@+id/tvPostcode"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
         android:layout_marginLeft="100dp"
         android:text="Postcode"/>
     <EditText
@@ -117,6 +123,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="100dp"
+        android:inputType="number"
+        android:maxLength="4"
         android:ems="10"/>
     <TextView
         android:id="@+id/tvUsername"
@@ -129,6 +137,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="100dp"
+        android:maxLength="50"
         android:ems="10"/>
     <TextView
         android:id="@+id/tvPassword"
@@ -142,22 +151,14 @@
         android:layout_height="wrap_content"
         android:inputType="textPassword"
         android:layout_marginLeft="100dp"
+        android:maxLength="20"
         android:ems="10"/>
-
     <Button
         android:id="@+id/btnRegister"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="30dp"
         android:text="Register"
-        android:layout_gravity="center"/>
-
-    <Button
-        android:id="@+id/btnBack"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
-        android:text="Go back"
         android:layout_gravity="center"/>
 
 </LinearLayout>
