@@ -13,9 +13,13 @@ public class Movie implements Parcelable {
     private Date releaseDate;
     private String synopsis;
     private String moviePoster;
+    private String country;
     private ArrayList<String> genres;
     private ArrayList<String> cast;
     private ArrayList<String> director;
+
+    public Movie()
+    {}
 
     public Movie(int movieID, String movieName, Date releaseDate, String synopsis, String moviePoster, ArrayList<String> genres, ArrayList<String> cast, ArrayList<String> director) {
         this.movieID = movieID;
@@ -34,11 +38,16 @@ public class Movie implements Parcelable {
         this.releaseDate = releaseDate;
         this.moviePoster = moviePoster;
         this.synopsis = synopsis;
+        genres = new ArrayList<>();
+        cast = new ArrayList<>();
+        director = new ArrayList<>();
     }
 
     public Movie(Parcel in) {
-        this.movieID = in.readInt();
-        this.releaseDate = new Date(in.readLong());
+        int[] idData = new int[1];
+        in.readIntArray(idData);
+        this.movieID = idData[0];
+        //this.releaseDate = new Date(in.readLong());
         String[] data = new String[3];
         in.readStringArray(data);
         this.movieName = data[0];
@@ -47,12 +56,10 @@ public class Movie implements Parcelable {
     }
 
     public void writeToParcel(Parcel parcel, int flags) {
-        parcel.writeLong(releaseDate.getTime());
-        parcel.writeInt(movieID);
+        //parcel.writeLong(releaseDate.getTime());
+        parcel.writeIntArray(new int[] {movieID});
+        //parcel.writeInt(movieID);
         parcel.writeStringArray(new String[] {movieName,moviePoster,synopsis});
-        /*parcel.writeString(movieName);
-        parcel.writeString(moviePoster);
-        parcel.writeString(synopsis);*/
     }
 
     public int describeContents() {
@@ -136,5 +143,13 @@ public class Movie implements Parcelable {
 
     public void setDirector(ArrayList<String> director) {
         this.director = director;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
     }
 }
