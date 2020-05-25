@@ -214,16 +214,16 @@ public class NetworkConnection {
                 }
                 String name = currMovie.getString("title");
                 String releaseDate = currMovie.getString("release_date");
-                Date date1= null;
+                String overview = currMovie.getString("overview");
+                Date date= null;
                 try {
-                    date1 = new SimpleDateFormat("yyyy-MM-dd").parse(releaseDate);
+                    date = new SimpleDateFormat("yyyy-MM-dd").parse(releaseDate);
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
-                int releaseYear = date1 != null ? date1.getYear() + 1900 : 0;
                 String posterPath = currMovie.getString("poster_path");
                 int movieID = currMovie.getInt("id");
-                moviesArr.add(new Movie(movieID,name,releaseYear,posterPath));
+                moviesArr.add(new Movie(movieID,name,date,posterPath,overview));
             }
 
         }

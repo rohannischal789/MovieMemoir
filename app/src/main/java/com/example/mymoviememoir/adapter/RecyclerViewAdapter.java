@@ -1,6 +1,8 @@
 package com.example.mymoviememoir.adapter;
 
 import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +12,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.mymoviememoir.MovieSearchFragment;
+import com.example.mymoviememoir.MovieViewActivity;
 import com.example.mymoviememoir.R;
 import com.example.mymoviememoir.model.Movie;
 import com.squareup.picasso.Picasso;
@@ -18,11 +22,14 @@ import java.util.List;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter
         <RecyclerViewAdapter.ViewHolder> {
+    private Context context;
     public class ViewHolder extends RecyclerView.ViewHolder {
         // ViewHolder should contain variables for all the views in each row of the
         public TextView tvMovieName;
         public TextView tvReleaseYear;
         public ImageView imageView;
+
+
         // a constructor that accepts the entire View (itemView)
         // provides a reference and access to all the views in each row
         public ViewHolder(View itemView) {
@@ -30,6 +37,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter
             tvMovieName = itemView.findViewById(R.id.tvMovieName1);
             tvReleaseYear = itemView.findViewById(R.id.tvReleaseYear);
             imageView = itemView.findViewById(R.id.ivMoviePoster);
+            context = itemView.getContext();
         }
     }
     @Override
@@ -71,5 +79,16 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter
                 .resize(200, 200)
                 .centerInside()
                 .into(imageView);
+
+        viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, MovieViewActivity.class);
+                Bundle bundle=new Bundle();
+                bundle.putParcelable("selectedMovie", movie);
+                intent.putExtras (bundle);
+                context.startActivity(intent);
+            }
+        });
     }
 }
