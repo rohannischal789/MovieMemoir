@@ -2,9 +2,13 @@ package com.example.mymoviememoir;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.example.mymoviememoir.model.Movie;
@@ -24,6 +28,7 @@ public class MovieViewActivity extends AppCompatActivity {
     private TextView tvMovieName2;
     private TextView tvSynopsis;
     private ImageView imageView;
+    private RatingBar rBar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,10 +46,32 @@ public class MovieViewActivity extends AppCompatActivity {
         tvDirector = findViewById(R.id.tvDirector);
         tvCountry = findViewById(R.id.tvCountry);
         imageView = findViewById(R.id.ivPoster);
+        rBar = findViewById(R.id.ratingBar1);
         networkConnection = new NetworkConnection();
         getMovieDetails movieDetails = new getMovieDetails();
         movieDetails.execute(movie);
 
+        Button btnWatchlist = findViewById(R.id.btnWatchlist);
+        btnWatchlist.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MovieViewActivity.this,
+                        MainActivity.class);
+                intent.putExtra("option",2);
+                startActivity(intent);
+            }
+        });
+
+        Button btnMemoir = findViewById(R.id.btnMemoir);
+        btnMemoir.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MovieViewActivity.this,
+                        MainActivity.class);
+                intent.putExtra("option",1);
+                startActivity(intent);
+            }
+        });
     }
 
     private class getMovieDetails extends AsyncTask<Movie, Void, Movie> {
@@ -80,6 +107,7 @@ public class MovieViewActivity extends AppCompatActivity {
             tvMovieName2.setText("Movie name: " + details.getMovieName());
             tvSynopsis.setText("Synopsis: " + details.getSynopsis());
 
+            rBar.setRating((float)details.getRating());
             String fullPath = "https://image.tmdb.org/t/p/w500/" + details.getMoviePoster();
             Picasso.get()
                     .load(fullPath)

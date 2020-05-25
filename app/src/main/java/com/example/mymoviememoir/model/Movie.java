@@ -14,6 +14,7 @@ public class Movie implements Parcelable {
     private String synopsis;
     private String moviePoster;
     private String country;
+    private double rating;
     private ArrayList<String> genres;
     private ArrayList<String> cast;
     private ArrayList<String> director;
@@ -151,5 +152,13 @@ public class Movie implements Parcelable {
 
     public void setCountry(String country) {
         this.country = country;
+    }
+
+    public double getRating() {
+        return rating;
+    }
+
+    public void setRating(double rating) {
+        this.rating = rating;
     }
 }

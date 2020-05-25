@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -48,7 +49,21 @@ public class MainActivity extends AppCompatActivity  implements
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
         navigationView.setNavigationItemSelectedListener(this);
-        replaceFragment(new HomeFragment());
+        Intent returnIntent = getIntent();
+        int option = returnIntent.getIntExtra("option",0);
+        switch (option)
+        {
+            case 1:
+                replaceFragment(new MovieMemoirFragment());
+                break;
+            case 2:
+                replaceFragment(new WatchlistFragment());
+                break;
+            case 0:
+                replaceFragment(new HomeFragment());
+                break;
+        }
+        //replaceFragment(new HomeFragment());
     }
 
     @Override

@@ -269,6 +269,9 @@ public class NetworkConnection {
             }
             movie.setReleaseDate(date);
 
+            double rating = jsonResponse.getDouble("vote_average");
+            movie.setRating(rating/2);
+
             movie = getMovieCast(movie);
         } catch (Exception e) {
             e.printStackTrace();
