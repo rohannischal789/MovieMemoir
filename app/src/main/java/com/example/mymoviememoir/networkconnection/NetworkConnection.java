@@ -350,6 +350,50 @@ public class NetworkConnection {
         return movie;
     }
 
+    public List<Movie> findTop5UserRatedMovies(int personID) {
+        final String methodPath = "restmovie.memoir/findTop5RecentYearHighestRatedMovies/" + personID;
+        Request.Builder builder = new Request.Builder();
+        builder.url(BASE_URL + methodPath);
+        Request request = builder.build();
+        JSONArray array = new JSONArray();
+        ArrayList<Movie> moviesArr = new ArrayList<Movie>();
+        JSONArray jsonResponse;
+        try {
+            Response response = client.newCall(request).execute();
+            results = response.body().string();
+            jsonResponse = new JSONArray(results);
+
+            if (results.equals("[]")) {
+                results = "No movies so far";
+            } else {
+
+                for (int i = 0; i < jsonResponse.length(); i++) {
+                    JSONObject currMovie = null;
+                    try {
+                        currMovie = jsonResponse.getJSONObject(i);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    String name = currMovie.getString("movieName");
+                    Double rating = currMovie.getDouble("starRating");
+                    String releaseDate = currMovie.getString("movieReleaseDate");
+                    Date date = null;
+                    try {
+                        date = new SimpleDateFormat("yyyy-MM-dd").parse(releaseDate);
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                    moviesArr.add(new Movie(name, date, rating));
+                }
+
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return moviesArr;
+    }
+
     /*
 
                     String releaseDate = currMovie.getString("release_date");

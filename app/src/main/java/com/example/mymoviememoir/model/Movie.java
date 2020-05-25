@@ -44,6 +44,12 @@ public class Movie implements Parcelable {
         director = new ArrayList<>();
     }
 
+    public Movie(String movieName, Date releaseDate, double rating) {
+        this.movieName = movieName;
+        this.releaseDate = releaseDate;
+        this.rating = rating;
+    }
+
     public Movie(Parcel in) {
         int[] idData = new int[1];
         in.readIntArray(idData);
