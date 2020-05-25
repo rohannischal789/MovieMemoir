@@ -5,6 +5,7 @@ import android.util.Log;
 import com.example.mymoviememoir.SignInActivity;
 import com.example.mymoviememoir.entity.Credential;
 import com.example.mymoviememoir.entity.Person;
+import com.example.mymoviememoir.model.Movie;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
@@ -13,9 +14,12 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
@@ -35,6 +39,10 @@ public class NetworkConnection {
     //http://192.168.157.1:43592/MyMovieMemoir/webresources/restmovie.credential/findByUsername/aa
     private static final String BASE_URL =
             "http://192.168.157.1:43592/MyMovieMemoir/webresources/";
+
+    //private static final String MOVIES_URL = "https://api.themoviedb.org/3/movie/550?api_key=d6e8c114ba9fd0c52689305746305a3b";
+
+    private static final String MOVIE_SEARCH_URL = "https://api.themoviedb.org/3/search/movie?api_key=d6e8c114ba9fd0c52689305746305a3b&language=en-US&include_adult=false&query=";
 
     public String findByUsername(String username, String password){
         final String methodPath = "restmovie.credential/findByUsername/" + username;
@@ -172,5 +180,57 @@ public class NetworkConnection {
             e.printStackTrace();
         }
         return strResponse;
+    }
+
+    public List<Movie> findByMovieName(String movieName){
+        Request.Builder builder = new Request.Builder();
+        builder.url(MOVIE_SEARCH_URL + movieName);
+        Request request = builder.build();
+        JSONArray array = new JSONArray();
+        ArrayList<Movie> moviesArr = new ArrayList<Movie>();
+        JSONObject jsonResponse = new JSONObject();
+        try {
+            Response response = client.newCall(request).execute();
+            results=response.body().string();
+            jsonResponse = new JSONObject(results);
+
+        if(results.equals("[]"))
+        {
+            //results = "Incorrect username";
+        }
+        else {
+            JSONArray movies = null;
+            try {
+                movies = jsonResponse.getJSONArray("results");
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            for (int i=0; i< movies.length(); i++) {
+                JSONObject currMovie = null;
+                try {
+                    currMovie = movies.getJSONObject(i);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                String name = currMovie.getString("title");
+                String releaseDate = currMovie.getString("release_date");
+                Date date1= null;
+                try {
+                    date1 = new SimpleDateFormat("yyyy-MM-dd").parse(releaseDate);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                int releaseYear = date1 != null ? date1.getYear() + 1900 : 0;
+                String posterPath = currMovie.getString("poster_path");
+                int movieID = currMovie.getInt("id");
+                moviesArr.add(new Movie(movieID,name,releaseYear,posterPath));
+            }
+
+        }
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return moviesArr;
     }
 }
