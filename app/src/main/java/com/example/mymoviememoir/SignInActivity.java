@@ -36,7 +36,7 @@ public class SignInActivity extends AppCompatActivity {
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getUserByUserName verifyUserTask = new getUserByUserName();
+                verifyUserTask verifyUserTask = new verifyUserTask();
 
                 String username = etUsername.getText().toString();
                 String password = etPass.getText().toString();
@@ -79,11 +79,11 @@ public class SignInActivity extends AppCompatActivity {
         });
     }
 
-    private class getUserByUserName extends AsyncTask<String, Void, String> {
+    private class verifyUserTask extends AsyncTask<String, Void, String> {
 
         @Override
         protected String doInBackground(String... params) {
-            return networkConnection.findByUsername(params[0],params[1]);
+            return networkConnection.verifyUser(params[0],params[1]);
         }
 
         @Override

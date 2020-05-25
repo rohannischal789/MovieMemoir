@@ -26,13 +26,23 @@ public class SignUpActivity extends AppCompatActivity {
     final Calendar myCalendar = Calendar.getInstance();
     EditText edittext;
     NetworkConnection networkConnection=null;
+    EditText etFirstName;
+    EditText etSurname;
+    EditText etBirthday;
+    EditText etAddress;
+    EditText etPostcode;
+    EditText etUsername1;
+    EditText etPassword;
+    Spinner sState;
+    RadioGroup radioGroup;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
         networkConnection=new NetworkConnection();
 
-        EditText edittext= (EditText) findViewById(R.id.etBirthday);
+        EditText edittext= findViewById(R.id.etBirthday);
         final DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
 
             @Override
@@ -50,21 +60,23 @@ public class SignUpActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-                new DatePickerDialog(SignUpActivity.this, date, myCalendar
+                DatePickerDialog dialog = new DatePickerDialog(SignUpActivity.this, date, myCalendar
                         .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
-                        myCalendar.get(Calendar.DAY_OF_MONTH)).show();
+                        myCalendar.get(Calendar.DAY_OF_MONTH));
+                dialog.getDatePicker().setMaxDate(System.currentTimeMillis());
+                dialog.show();
             }
         });
 
-        final EditText etFirstName = findViewById(R.id.etFirstName);
-        final EditText etSurname = findViewById(R.id.etSurname);
-        final EditText etBirthday = findViewById(R.id.etBirthday);
-        final EditText etAddress = findViewById(R.id.etAddress);
-        final EditText etPostcode = findViewById(R.id.etPostcode);
-        final EditText etUsername1 = findViewById(R.id.etUsername1);
-        final EditText etPassword = findViewById(R.id.etPassword);
-        final Spinner sState= findViewById(R.id.stateSpinner);
-        final RadioGroup radioGroup = findViewById(R.id.radiogroup);
+        etFirstName = findViewById(R.id.etFirstName);
+        etSurname = findViewById(R.id.etSurname);
+        etBirthday = findViewById(R.id.etBirthday);
+        etAddress = findViewById(R.id.etAddress);
+        etPostcode = findViewById(R.id.etPostcode);
+        etUsername1 = findViewById(R.id.etUsername1);
+        etPassword = findViewById(R.id.etPassword);
+        sState= findViewById(R.id.stateSpinner);
+        radioGroup = findViewById(R.id.radiogroup);
 
         Button btnRegister = findViewById(R.id.btnRegister);
         btnRegister.setOnClickListener(new View.OnClickListener() {
@@ -82,15 +94,14 @@ public class SignUpActivity extends AppCompatActivity {
                 int selectedId = radioGroup.getCheckedRadioButtonId();
                 RadioButton radioButton = findViewById(selectedId);
                 String gender = radioButton.getText().toString();
-
-                //todo: validate for all stringd
-                if (!username.isEmpty() && !password.isEmpty()) {
-                    registerUser reg = new registerUser();
-                    reg.execute(firstName,surname,gender,birthday,address,state,postcode,username, Util.getMd5(password));
+                if (!username.isEmpty() && !password.isEmpty()&& !firstName.isEmpty()&& !surname.isEmpty()&& !birthday.isEmpty()&& !address.isEmpty()
+                        && !postcode.isEmpty()&& !state.isEmpty() && !gender.isEmpty()) {
+                    doesUsernameExistTask usernameExistTask = new doesUsernameExistTask();
+                    usernameExistTask.execute(username);
                 }
                 else
                 {
-                    Toast.makeText(getApplicationContext(),"Please enter username and password",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(),"Please enter all the values",Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -128,6 +139,47 @@ public class SignUpActivity extends AppCompatActivity {
         }
     }
 
+    private class doesUsernameExistTask extends AsyncTask<String, Void, Boolean> {
+
+        @Override
+        protected Boolean doInBackground(String... params) {
+            return networkConnection.doesUsernameExist(params[0]);
+        }
+
+        @Override
+        protected void onPostExecute(Boolean result) {
+
+            if(!result) {
+                String username = etUsername1.getText().toString();
+                String firstName = etFirstName.getText().toString();
+                String surname = etSurname.getText().toString();
+                String birthday = etBirthday.getText().toString();
+                String address = etAddress.getText().toString();
+                String postcode = etPostcode.getText().toString();
+                String password = etPassword.getText().toString();
+                String state = sState.getSelectedItem().toString();
+                int selectedId = radioGroup.getCheckedRadioButtonId();
+                RadioButton radioButton = findViewById(selectedId);
+                String gender = radioButton.getText().toString();
+
+                //todo: validate for all stringd
+                if (!username.isEmpty() && !password.isEmpty()&& !firstName.isEmpty()&& !surname.isEmpty()&& !birthday.isEmpty()&& !address.isEmpty()
+                        && !postcode.isEmpty()&& !state.isEmpty() && !gender.isEmpty()) {
+                    registerUser reg = new registerUser();
+                    reg.execute(firstName, surname, gender, birthday, address, state, postcode, username, Util.getMd5(password));
+                } else {
+                    Toast.makeText(getApplicationContext(), "Please enter username and password", Toast.LENGTH_SHORT).show();
+                }
+            }
+            else
+            {
+                Toast.makeText(getApplicationContext(), "Username already exists! Please use a different one", Toast.LENGTH_SHORT).show();
+            }
+            //TextView resultTextView = findViewById(R.id.tvCheck);
+            //resultTextView.setText(details);
+            //Todo: save in shared preferences if all good
+        }
+    }
 
 
 }

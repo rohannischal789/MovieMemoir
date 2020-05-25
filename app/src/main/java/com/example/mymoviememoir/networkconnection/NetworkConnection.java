@@ -44,7 +44,7 @@ public class NetworkConnection {
     private static String MOVIE_CREDIT_URL = "https://api.themoviedb.org/3/movie/{movie_id}/credits?api_key=d6e8c114ba9fd0c52689305746305a3b";
     private static String MOVIE_DETAILS_URL = "https://api.themoviedb.org/3/movie/{movie_id}?api_key=d6e8c114ba9fd0c52689305746305a3b&language=en-US";
 
-    public String findByUsername(String username, String password) {
+    public String verifyUser(String username, String password) {
         final String methodPath = "restmovie.credential/findByUsername/" + username;
         Request.Builder builder = new Request.Builder();
         builder.url(BASE_URL + methodPath);
@@ -83,6 +83,25 @@ public class NetworkConnection {
             }
         }
         return results;
+    }
+
+    public boolean doesUsernameExist(String username) {
+        final String methodPath = "restmovie.credential/findByUsername/" + username;
+        Request.Builder builder = new Request.Builder();
+        boolean result = false;
+        builder.url(BASE_URL + methodPath);
+        Request request = builder.build();
+        try {
+            Response response = client.newCall(request).execute();
+            results = response.body().string();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        if (!results.equals("[]")) {
+            result = true;
+        }
+        return result;
     }
 
     public int getMaxPersonID() {
