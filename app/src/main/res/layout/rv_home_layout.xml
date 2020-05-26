@@ -29,7 +29,6 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:isIndicator="true"
-                style="?android:attr/ratingBarStyleSmall"
                 android:numStars="5"/>
 
         </LinearLayout>
