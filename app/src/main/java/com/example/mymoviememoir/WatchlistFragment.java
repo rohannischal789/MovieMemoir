@@ -12,7 +12,11 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.mymoviememoir.adapter.WatchlistRecyclerViewAdapter;
 import com.example.mymoviememoir.database.WatchlistDatabase;
 import com.example.mymoviememoir.entity.Watchlist;
 import com.example.mymoviememoir.viewmodel.WatchlistViewModel;
@@ -23,6 +27,11 @@ public class WatchlistFragment extends Fragment {
 
     WatchlistDatabase db = null;
     WatchlistViewModel watchlistViewModel;
+    private RecyclerView recyclerView;
+    private RecyclerView.Adapter mAdapter;
+    private RecyclerView.LayoutManager layoutManager;
+    private List<Watchlist> movies;
+    private WatchlistRecyclerViewAdapter adapter;
     public WatchlistFragment() {
         // Required empty public constructor
     }
@@ -34,20 +43,27 @@ public class WatchlistFragment extends Fragment {
         final TextView tvShowMessage = view.findViewById(R.id.tv_showmessage);
         SharedPreferences sharedPref = getActivity().getSharedPreferences("data", Context.MODE_PRIVATE);
         final int personID = sharedPref.getInt("personID",0);
+
+        recyclerView = view.findViewById(R.id.recyclerViewWatchlist);
         watchlistViewModel = new ViewModelProvider(this).get(WatchlistViewModel.class);
         watchlistViewModel.initalizeVars(getActivity().getApplication());
         watchlistViewModel.getAllWatchlist(personID).observe(this, new
                 Observer<List<Watchlist>>() {
                     @Override
                     public void onChanged(@Nullable final List<Watchlist> watchlist) {
-                        String allCustomers = "";
+                        adapter = new WatchlistRecyclerViewAdapter(watchlist);
+                        recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), LinearLayoutManager.VERTICAL));
+                        recyclerView.setAdapter(adapter);
+                        layoutManager = new LinearLayoutManager(getActivity());
+                        recyclerView.setLayoutManager(layoutManager);
+                        /*String allCustomers = "";
                         for (Watchlist temp : watchlist) {
                             String customerstr = (temp.getMovieName() + " " +
                                     temp.getReleaseDate() + " " + temp.getWatchDateTime());
                             allCustomers = allCustomers +
                                     System.getProperty("line.separator") + customerstr;
                         }
-                        tvShowMessage.setText("All data: " + allCustomers);
+                        tvShowMessage.setText("All data: " + allCustomers);*/
                     }
                 });
         return view;
