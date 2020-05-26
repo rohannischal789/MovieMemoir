@@ -2,7 +2,9 @@ package com.example.mymoviememoir;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.method.HideReturnsTransformationMethod;
@@ -92,6 +94,11 @@ public class SignInActivity extends AppCompatActivity {
             try{
                 int num = Integer.parseInt(details);
                 Toast.makeText(getApplicationContext(), "Login successful" ,Toast.LENGTH_SHORT).show();
+                SharedPreferences sharedPref = getApplicationContext().getSharedPreferences("data", Context.MODE_PRIVATE);
+                SharedPreferences.Editor spEditor = sharedPref.edit();
+                spEditor.putInt("personID", num);
+                spEditor.apply();
+
                 Intent intent = new Intent(SignInActivity.this, MainActivity.class);
                 startActivity(intent);
             } catch (NumberFormatException e) {

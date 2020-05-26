@@ -1,8 +1,11 @@
 package com.example.mymoviememoir;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
@@ -10,13 +13,20 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.example.mymoviememoir.database.WatchlistDatabase;
+import com.example.mymoviememoir.entity.Watchlist;
 import com.example.mymoviememoir.model.Movie;
 import com.example.mymoviememoir.networkconnection.NetworkConnection;
+import com.example.mymoviememoir.viewmodel.WatchlistViewModel;
 import com.squareup.picasso.Picasso;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
 
 public class MovieViewActivity extends AppCompatActivity {
     private NetworkConnection networkConnection;
@@ -29,6 +39,10 @@ public class MovieViewActivity extends AppCompatActivity {
     private TextView tvSynopsis;
     private ImageView imageView;
     private RatingBar rBar;
+    WatchlistDatabase db = null;
+    WatchlistViewModel watchlistViewModel;
+    private Button btnWatchlist;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,15 +64,22 @@ public class MovieViewActivity extends AppCompatActivity {
         networkConnection = new NetworkConnection();
         getMovieDetails movieDetails = new getMovieDetails();
         movieDetails.execute(movie);
-
-        Button btnWatchlist = findViewById(R.id.btnWatchlist);
+        btnWatchlist = findViewById(R.id.btnWatchlist);
+        SharedPreferences sharedPref = this.getSharedPreferences("data", Context.MODE_PRIVATE);
+        final int personID = sharedPref.getInt("personID",0);
+        watchlistViewModel = new ViewModelProvider(this).get(WatchlistViewModel.class);
+        watchlistViewModel.initalizeVars(getApplication());
         btnWatchlist.setOnClickListener(new View.OnClickListener() {
-            @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MovieViewActivity.this,
-                        MainActivity.class);
-                intent.putExtra("option",2);
-                startActivity(intent);
+                Watchlist watchlist = null;
+                try {
+                    watchlist = new Watchlist(personID, tvMovieName2.getText().toString(),
+                            new SimpleDateFormat("dd-MM-yyyy").parse(tvReleaseDate.getText().toString().replace("Release Date: ","")),new Date());
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                watchlistViewModel.insert(watchlist);
+                Toast.makeText(getApplicationContext(), "Added movie to Watchlist" ,Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -68,7 +89,7 @@ public class MovieViewActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(MovieViewActivity.this,
                         MainActivity.class);
-                intent.putExtra("option",1);
+                intent.putExtra("option", 1);
                 startActivity(intent);
             }
         });
@@ -107,7 +128,7 @@ public class MovieViewActivity extends AppCompatActivity {
             tvMovieName2.setText("Movie name: " + details.getMovieName());
             tvSynopsis.setText("Synopsis: " + details.getSynopsis());
 
-            rBar.setRating((float)details.getRating());
+            rBar.setRating((float) details.getRating());
             String fullPath = "https://image.tmdb.org/t/p/w500/" + details.getMoviePoster();
             Picasso.get()
                     .load(fullPath)
@@ -115,7 +136,6 @@ public class MovieViewActivity extends AppCompatActivity {
                     .resize(200, 200)
                     .centerInside()
                     .into(imageView);
-            ///Toast.makeText(getActivity(), "Movies searched" ,Toast.LENGTH_SHORT).show();
 
             //TextView resultTextView = findViewById(R.id.tvCheck);
             //resultTextView.setText(details);

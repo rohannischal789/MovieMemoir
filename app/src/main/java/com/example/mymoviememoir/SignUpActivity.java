@@ -3,7 +3,9 @@ package com.example.mymoviememoir;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.DatePickerDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
@@ -128,6 +130,10 @@ public class SignUpActivity extends AppCompatActivity {
             try{
                 int num = Integer.parseInt(details);
                 Toast.makeText(getApplicationContext(), "Registration successful" ,Toast.LENGTH_SHORT).show();
+                SharedPreferences sharedPref = getApplicationContext().getSharedPreferences("data", Context.MODE_PRIVATE);
+                SharedPreferences.Editor spEditor = sharedPref.edit();
+                spEditor.putInt("personID", num);
+                spEditor.apply();
                 Intent intent = new Intent(SignUpActivity.this, MainActivity.class);
                 startActivity(intent);
             } catch (NumberFormatException e) {

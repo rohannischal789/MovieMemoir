@@ -1,5 +1,7 @@
 package com.example.mymoviememoir;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -37,8 +39,10 @@ public class HomeFragment extends Fragment {
         networkConnection = new NetworkConnection();
         movies = new ArrayList<Movie>();
 
+        SharedPreferences sharedPref = getActivity().getSharedPreferences("data", Context.MODE_PRIVATE);
+        int personID = sharedPref.getInt("personID",0);
         findMovieByName movieByName = new findMovieByName();
-        movieByName.execute(2);
+        movieByName.execute(personID);
 
         return view;
     }

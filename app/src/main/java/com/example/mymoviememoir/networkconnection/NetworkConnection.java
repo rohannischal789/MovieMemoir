@@ -50,37 +50,31 @@ public class NetworkConnection {
         builder.url(BASE_URL + methodPath);
         Request request = builder.build();
         String passwordHash = "";
-        String credentialID = "";
         JSONArray array = new JSONArray();
         try {
             Response response = client.newCall(request).execute();
             results = response.body().string();
             array = new JSONArray(results);
+
+
+            if (results.equals("[]")) {
+                results = "Incorrect username";
+            } else {
+                JSONObject object = null;
+                object = array.getJSONObject(0);
+
+                passwordHash = object.getString("passwordhash");
+
+                if (passwordHash.equalsIgnoreCase(password)) {
+                    JSONObject personObject = null;
+                    personObject = object.getJSONObject("personid");
+                    results = personObject.getString("personid");
+                } else {
+                    results = "Incorrect password";
+                }
+            }
         } catch (Exception e) {
             e.printStackTrace();
-        }
-
-        if (results.equals("[]")) {
-            results = "Incorrect username";
-        } else {
-            JSONObject object = null;
-            try {
-                object = array.getJSONObject(0);
-            } catch (JSONException ex) {
-                ex.printStackTrace();
-            }
-            try {
-                passwordHash = object.getString("passwordhash");
-                credentialID = object.getString("credentialid");
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
-            if (passwordHash.equalsIgnoreCase(password)) {
-                results = credentialID;
-            } else {
-                results = "Incorrect password";
-            }
         }
         return results;
     }
@@ -127,7 +121,6 @@ public class NetworkConnection {
         builder.url(BASE_URL + methodPath);
         Request request = builder.build();
         int num = 0;
-        JSONArray array = new JSONArray();
         try {
             Response response = client.newCall(request).execute();
             results = response.body().string();
@@ -166,7 +159,7 @@ public class NetworkConnection {
             strResponse = response.body().string();
         } catch (Exception e) {
             e.printStackTrace();
-            Log.i("excep ", e.toString());
+            Log.i("error ", e.toString());
         }
         Log.i("strResponse ", strResponse);
 
@@ -274,7 +267,7 @@ public class NetworkConnection {
 
             JSONObject currCountry = null;
             JSONArray countries = jsonResponse.getJSONArray("production_countries");
-            if(countries.length() > 0) {
+            if (countries.length() > 0) {
                 currCountry = countries.getJSONObject(0);
                 movie.setCountry(currCountry.getString("name"));
             }
@@ -289,7 +282,7 @@ public class NetworkConnection {
             movie.setReleaseDate(date);
 
             double rating = jsonResponse.getDouble("vote_average");
-            movie.setRating(rating/2);
+            movie.setRating(rating / 2);
 
             movie = getMovieCast(movie);
         } catch (Exception e) {
@@ -329,8 +322,7 @@ public class NetworkConnection {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                if(currCrew.getString("job").equalsIgnoreCase("director"))
-                {
+                if (currCrew.getString("job").equalsIgnoreCase("director")) {
                     movie.getDirector().add(currCrew.getString("name"));
                 }
             }
