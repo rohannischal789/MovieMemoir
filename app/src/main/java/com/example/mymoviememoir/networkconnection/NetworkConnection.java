@@ -2,7 +2,7 @@ package com.example.mymoviememoir.networkconnection;
 
 import android.util.Log;
 
-import com.example.mymoviememoir.SignInActivity;
+import com.example.mymoviememoir.entity.Cinema;
 import com.example.mymoviememoir.entity.Credential;
 import com.example.mymoviememoir.entity.Person;
 import com.example.mymoviememoir.model.Movie;
@@ -384,6 +384,92 @@ public class NetworkConnection {
             e.printStackTrace();
         }
         return moviesArr;
+    }
+
+    public List<Cinema> getAllCinemas() {
+        final String methodPath = "restmovie.cinema";
+        Request.Builder builder = new Request.Builder();
+        builder.url(BASE_URL + methodPath);
+        Request request = builder.build();
+        ArrayList<Cinema> cinemas = new ArrayList<>();
+        JSONArray array = new JSONArray();
+        try {
+            Response response = client.newCall(request).execute();
+            results = response.body().string();
+            array = new JSONArray(results);
+
+            if (results.equals("[]")) {
+                results = "No data";
+            } else {
+                for (int i = 0; i < array.length(); i++) {
+                    JSONObject object = null;
+                    object = array.getJSONObject(i);
+                    int cinemaId = object.getInt("cinemaid");
+                    String cinemaName = object.getString("cinemaname");
+                    String postcode = object.getString("postcode");
+                    Cinema cinema = new Cinema(cinemaId,cinemaName,postcode);
+                    cinemas.add(cinema);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return cinemas;
+    }
+
+    public String addCinema(String cinemaName, String postcode) {
+        int maxCinemaID = getMaxCinemaID();
+        Cinema cinema = new Cinema(maxCinemaID, cinemaName, postcode);
+        Gson gson = new Gson();
+        String cinemaJSON = gson.toJson(cinema);
+        String strResponse = "";
+        //this is for testing, you can check how the json looks like in Logcat
+        Log.i("json ", cinemaJSON);
+        final String methodPath = "restmovie.cinema/";
+        RequestBody body = RequestBody.create(cinemaJSON, JSON);
+        Request request = new Request.Builder()
+                .url(BASE_URL + methodPath)
+                .post(body)
+                .build();
+        try {
+            Response response = client.newCall(request).execute();
+            strResponse = response.body().string();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return strResponse;
+    }
+
+    public int getMaxCinemaID() {
+        final String methodPath = "restmovie.cinema/getMaxCinemaID/";
+        Request.Builder builder = new Request.Builder();
+        builder.url(BASE_URL + methodPath);
+        Request request = builder.build();
+        int num = 0;
+        try {
+            Response response = client.newCall(request).execute();
+            results = response.body().string();
+            num = Integer.parseInt(results);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return num;
+    }
+
+    public Boolean doesCinemaExist(String cinemaName, String postcode) {
+        final String methodPath = "restmovie.cinema/doesCinemaExist/" + cinemaName + "/" + postcode;
+        Request.Builder builder = new Request.Builder();
+        builder.url(BASE_URL + methodPath);
+        Request request = builder.build();
+        Boolean isExistingCinema = true;
+        try {
+            Response response = client.newCall(request).execute();
+            results = response.body().string();
+            isExistingCinema = Boolean.valueOf(results);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return isExistingCinema;
     }
 
     /*

@@ -48,7 +48,7 @@ public class MovieViewActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_view);
         Bundle bundle = getIntent().getExtras();
-        Movie movie = bundle.getParcelable("selectedMovie");
+        final Movie movie = bundle.getParcelable("selectedMovie");
         movie.setGenres(new ArrayList<String>());
         movie.setCast(new ArrayList<String>());
         movie.setDirector(new ArrayList<String>());
@@ -88,8 +88,10 @@ public class MovieViewActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MovieViewActivity.this,
-                        MainActivity.class);
-                intent.putExtra("option", 1);
+                        AddMemoirActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putParcelable("selectedMovie", movie);
+                intent.putExtras(bundle);
                 startActivity(intent);
             }
         });

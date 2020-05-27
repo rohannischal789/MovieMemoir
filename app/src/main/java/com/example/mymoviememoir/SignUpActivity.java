@@ -26,7 +26,6 @@ import java.util.Locale;
 
 public class SignUpActivity extends AppCompatActivity {
     final Calendar myCalendar = Calendar.getInstance();
-    EditText edittext;
     NetworkConnection networkConnection=null;
     EditText etFirstName;
     EditText etSurname;

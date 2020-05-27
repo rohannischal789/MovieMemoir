@@ -51,9 +51,10 @@ public class Movie implements Parcelable {
     }
 
     public Movie(Parcel in) {
-        int[] idData = new int[1];
-        in.readIntArray(idData);
-        this.movieID = idData[0];
+        long[] longData = new long[2];
+        in.readLongArray(longData);
+        this.movieID = (int) longData[0];
+        this.releaseDate = new Date(longData[0]);
         //this.releaseDate = new Date(in.readLong());
         String[] data = new String[3];
         in.readStringArray(data);
@@ -64,7 +65,7 @@ public class Movie implements Parcelable {
 
     public void writeToParcel(Parcel parcel, int flags) {
         //parcel.writeLong(releaseDate.getTime());
-        parcel.writeIntArray(new int[] {movieID});
+        parcel.writeLongArray(new long[]{ Long.valueOf(movieID), releaseDate.getTime()});
         //parcel.writeInt(movieID);
         parcel.writeStringArray(new String[] {movieName,moviePoster,synopsis});
     }
