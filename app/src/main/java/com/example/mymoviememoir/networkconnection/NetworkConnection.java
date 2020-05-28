@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.example.mymoviememoir.entity.Cinema;
 import com.example.mymoviememoir.entity.Credential;
+import com.example.mymoviememoir.entity.Memoir;
 import com.example.mymoviememoir.entity.Person;
 import com.example.mymoviememoir.model.Movie;
 import com.google.gson.Gson;
@@ -17,6 +18,9 @@ import org.json.JSONObject;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -117,6 +121,22 @@ public class NetworkConnection {
 
     public int getMaxCredID() {
         final String methodPath = "restmovie.credential/getMaxCredentialID/";
+        Request.Builder builder = new Request.Builder();
+        builder.url(BASE_URL + methodPath);
+        Request request = builder.build();
+        int num = 0;
+        try {
+            Response response = client.newCall(request).execute();
+            results = response.body().string();
+            num = Integer.parseInt(results);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return num;
+    }
+
+    public int getMaxMemoirID() {
+        final String methodPath = "restmovie.memoir/getMaxMemoirID/";
         Request.Builder builder = new Request.Builder();
         builder.url(BASE_URL + methodPath);
         Request request = builder.build();
@@ -280,7 +300,10 @@ public class NetworkConnection {
                 e.printStackTrace();
             }
             movie.setReleaseDate(date);
-
+            String overview = jsonResponse.getString("overview");
+            String posterPath = jsonResponse.getString("poster_path");
+            movie.setSynopsis(overview);
+            movie.setMoviePoster(posterPath);
             double rating = jsonResponse.getDouble("vote_average");
             movie.setRating(rating / 2);
 
@@ -407,7 +430,7 @@ public class NetworkConnection {
                     int cinemaId = object.getInt("cinemaid");
                     String cinemaName = object.getString("cinemaname");
                     String postcode = object.getString("postcode");
-                    Cinema cinema = new Cinema(cinemaId,cinemaName,postcode);
+                    Cinema cinema = new Cinema(cinemaId, cinemaName, postcode);
                     cinemas.add(cinema);
                 }
             }
@@ -470,6 +493,66 @@ public class NetworkConnection {
             e.printStackTrace();
         }
         return isExistingCinema;
+    }
+
+    public boolean addMemoir(String moviename, String moviereleasedate, String watchdate, String watchtime, String comment, String starrating, String cinemaid,  String personid) {
+
+        Boolean isAdded = false;
+        try {
+            int maxMemoirID = getMaxMemoirID();
+
+            Date releaseDate = null;
+            releaseDate = new SimpleDateFormat("dd/MM/yyyy").parse(moviereleasedate);
+
+            Date watchDateTime = null;
+            watchDateTime = new SimpleDateFormat("dd/MM/yyyyHH:mm").parse(watchdate+ watchtime);
+
+            Memoir Memoir = new Memoir(maxMemoirID, moviename, releaseDate, watchDateTime, comment,Double.valueOf(starrating));
+            Memoir.setCinemaId(Integer.valueOf( cinemaid));
+            int credentialID = getCredentialID(Integer.valueOf( personid));
+            Memoir.setCredentialId(credentialID);
+            Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss").create();
+            //RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint(API_BASE_URL).setConverter(new GsonConverter.create(gson)).build();
+            //Gson gson = new Gson();
+            String memoirJson = gson.toJson(Memoir);
+            String strResponse = "";
+            //this is for testing, you can check how the json looks like in Logcat
+            Log.i("json ", memoirJson);
+            final String methodPath = "restmovie.memoir/";
+            RequestBody body = RequestBody.create(memoirJson, JSON);
+            Request request = new Request.Builder()
+                    .url(BASE_URL + methodPath)
+                    .post(body)
+                    .build();
+            try {
+                Response response = client.newCall(request).execute();
+                strResponse = response.body().string();
+                isAdded = true;
+            } catch (Exception e) {
+                e.printStackTrace();
+                Log.i("error ", e.toString());
+            }
+            Log.i("strResponse ", strResponse);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return isAdded;
+    }
+
+    public int getCredentialID(int personID) {
+        final String methodPath = "restmovie.credential/getCredentialID/" + personID;
+        Request.Builder builder = new Request.Builder();
+        builder.url(BASE_URL + methodPath);
+        Request request = builder.build();
+        int num = 0;
+        try {
+            Response response = client.newCall(request).execute();
+            results = response.body().string();
+            num = Integer.parseInt(results);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return num;
     }
 
     /*

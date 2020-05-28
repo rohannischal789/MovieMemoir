@@ -40,7 +40,6 @@ public class WatchlistFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the View for this fragment
         final View view = inflater.inflate(R.layout.watchlist_fragment, container, false);
-        final TextView tvShowMessage = view.findViewById(R.id.tv_showmessage);
         SharedPreferences sharedPref = getActivity().getSharedPreferences("data", Context.MODE_PRIVATE);
         final int personID = sharedPref.getInt("personID",0);
 
@@ -51,19 +50,11 @@ public class WatchlistFragment extends Fragment {
                 Observer<List<Watchlist>>() {
                     @Override
                     public void onChanged(@Nullable final List<Watchlist> watchlist) {
-                        adapter = new WatchlistRecyclerViewAdapter(watchlist);
+                        adapter = new WatchlistRecyclerViewAdapter(watchlist, watchlistViewModel);
                         recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), LinearLayoutManager.VERTICAL));
                         recyclerView.setAdapter(adapter);
                         layoutManager = new LinearLayoutManager(getActivity());
                         recyclerView.setLayoutManager(layoutManager);
-                        /*String allCustomers = "";
-                        for (Watchlist temp : watchlist) {
-                            String customerstr = (temp.getMovieName() + " " +
-                                    temp.getReleaseDate() + " " + temp.getWatchDateTime());
-                            allCustomers = allCustomers +
-                                    System.getProperty("line.separator") + customerstr;
-                        }
-                        tvShowMessage.setText("All data: " + allCustomers);*/
                     }
                 });
         return view;

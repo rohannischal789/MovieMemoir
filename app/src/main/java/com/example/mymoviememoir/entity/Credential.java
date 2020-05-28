@@ -6,6 +6,8 @@ public class Credential {
     private String passwordhash;
     private Person personid;
 
+    public Credential(){}
+
     public Credential(Integer credentialid, String username, String passwordhash) {
         this.credentialid = credentialid;
         this.username = username;

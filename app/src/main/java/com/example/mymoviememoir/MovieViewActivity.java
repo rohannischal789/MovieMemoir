@@ -1,6 +1,8 @@
 package com.example.mymoviememoir;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.content.Context;
@@ -27,6 +29,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 public class MovieViewActivity extends AppCompatActivity {
     private NetworkConnection networkConnection;
@@ -61,6 +64,7 @@ public class MovieViewActivity extends AppCompatActivity {
         tvCountry = findViewById(R.id.tvCountry);
         imageView = findViewById(R.id.ivPoster);
         rBar = findViewById(R.id.ratingBar1);
+
         networkConnection = new NetworkConnection();
         getMovieDetails movieDetails = new getMovieDetails();
         movieDetails.execute(movie);
@@ -69,17 +73,37 @@ public class MovieViewActivity extends AppCompatActivity {
         final int personID = sharedPref.getInt("personID",0);
         watchlistViewModel = new ViewModelProvider(this).get(WatchlistViewModel.class);
         watchlistViewModel.initalizeVars(getApplication());
+
+        watchlistViewModel.getAllWatchlist(personID).observe(this, new
+                Observer<List<Watchlist>>() {
+                    @Override
+                    public void onChanged(@Nullable final List<Watchlist> watchlist) {
+                        for (Watchlist w : watchlist) {
+                            if (w.getMovieID() == movie.getMovieID())
+                                btnWatchlist.setEnabled(false);
+                        }
+                    }
+                });
+
+
         btnWatchlist.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Watchlist watchlist = null;
                 try {
-                    watchlist = new Watchlist(personID, tvMovieName2.getText().toString(),
-                            new SimpleDateFormat("dd-MM-yyyy").parse(tvReleaseDate.getText().toString().replace("Release Date: ","")),new Date());
+
+                    if(btnWatchlist.isEnabled()) {
+                        watchlist = new Watchlist(personID, tvMovieName2.getText().toString().replace("Movie name: ", ""),
+                                new SimpleDateFormat("dd-MM-yyyy").parse(tvReleaseDate.getText().toString().replace("Release Date: ", "")), new Date(), movie.getMovieID());
+                        watchlistViewModel.insert(watchlist);
+                        Toast.makeText(getApplicationContext(), "Added movie to Watchlist" ,Toast.LENGTH_SHORT).show();
+                    }
+                    else
+                    {
+                        Toast.makeText(getApplicationContext(), "Movie already exists in watchlist" ,Toast.LENGTH_SHORT).show();
+                    }
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
-                watchlistViewModel.insert(watchlist);
-                Toast.makeText(getApplicationContext(), "Added movie to Watchlist" ,Toast.LENGTH_SHORT).show();
             }
         });
 

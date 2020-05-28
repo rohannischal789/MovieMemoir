@@ -32,6 +32,9 @@ public class WatchlistViewModel extends ViewModel {
     public void insertAll(Watchlist... watchlist) {
         wRepository.insertAll(watchlist);
     }
+    public void delete(Watchlist watchlist) {
+        wRepository.delete(watchlist);
+    }
     public void deleteAll() {
         wRepository.deleteAll();
     }

@@ -28,5 +28,4 @@ public interface WatchlistDAO {
     void delete(Watchlist watchlist);
     @Query("DELETE FROM watchlist")
     void deleteAll();
-
 }

@@ -54,7 +54,7 @@ public class Movie implements Parcelable {
         long[] longData = new long[2];
         in.readLongArray(longData);
         this.movieID = (int) longData[0];
-        this.releaseDate = new Date(longData[0]);
+        this.releaseDate = new Date(longData[1]);
         //this.releaseDate = new Date(in.readLong());
         String[] data = new String[3];
         in.readStringArray(data);

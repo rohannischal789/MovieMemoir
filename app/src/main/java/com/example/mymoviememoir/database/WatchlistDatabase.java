@@ -14,7 +14,7 @@ import com.example.mymoviememoir.utilities.Converters;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-@Database(entities = {Watchlist.class}, version = 2, exportSchema = false)
+@Database(entities = {Watchlist.class}, version = 3, exportSchema = false)
 @TypeConverters({Converters.class})
 public abstract class WatchlistDatabase extends RoomDatabase {
     public abstract WatchlistDAO watchlistDAO();

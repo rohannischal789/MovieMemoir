@@ -12,6 +12,8 @@ public class Watchlist {
     public int uid;
     @ColumnInfo(name = "person_id")
     public int personID;
+    @ColumnInfo(name = "movie_id")
+    public int movieID;
     @ColumnInfo(name = "movie_name")
     public String movieName;
     @ColumnInfo(name = "release_date")
@@ -19,11 +21,12 @@ public class Watchlist {
     @ColumnInfo(name = "watchlist_datetime")
     public Date watchDateTime;
 
-    public Watchlist(int personID, String movieName, Date releaseDate, Date watchDateTime) {
+    public Watchlist(int personID, String movieName, Date releaseDate, Date watchDateTime, int movieID) {
         this.personID = personID;
         this.movieName = movieName;
         this.releaseDate = releaseDate;
         this.watchDateTime = watchDateTime;
+        this.movieID = movieID;
     }
 
     public void setUid(int uid) {
@@ -36,6 +39,14 @@ public class Watchlist {
 
     public void setPersonID(int personID) {
         this.personID = personID;
+    }
+
+    public int getMovieID() {
+        return movieID;
+    }
+
+    public void setMovieID(int movieID) {
+        this.movieID = movieID;
     }
 
     public int getUid() {

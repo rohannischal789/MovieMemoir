@@ -5,6 +5,8 @@ public class Cinema {
     private String cinemaname;
     private String postcode;
 
+    public Cinema(){}
+
     public Cinema(int cinemaId, String name, String postcode) {
         this.cinemaid = cinemaId;
         this.cinemaname = name;

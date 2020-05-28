@@ -1,6 +1,8 @@
 package com.example.mymoviememoir.adapter;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -15,10 +17,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.mymoviememoir.MovieViewActivity;
 import com.example.mymoviememoir.R;
 import com.example.mymoviememoir.entity.Watchlist;
+import com.example.mymoviememoir.model.Movie;
+import com.example.mymoviememoir.viewmodel.WatchlistViewModel;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -26,14 +32,14 @@ import java.util.List;
 
 public class WatchlistRecyclerViewAdapter extends RecyclerView.Adapter<WatchlistRecyclerViewAdapter.ViewHolder> {
     private Context context;
-    private int checkedPosition = 0;
+    WatchlistViewModel watchlistViewModel;
     public class ViewHolder extends RecyclerView.ViewHolder {
         // ViewHolder should contain variables for all the views in each row of the
         public TextView tvMovieName;
         public TextView tvReleaseDate;
         public TextView tvWatchDateTime;
-        public Button btnView;
-        public Button btnDelete;
+        public ImageButton btnView;
+        public ImageButton btnDelete;
 
         // a constructor that accepts the entire View (itemView)
         // provides a reference and access to all the views in each row
@@ -55,8 +61,9 @@ public class WatchlistRecyclerViewAdapter extends RecyclerView.Adapter<Watchlist
 
     private List<Watchlist> watchlists;
 
-    public WatchlistRecyclerViewAdapter(List<Watchlist> watchlist) {
+    public WatchlistRecyclerViewAdapter(List<Watchlist> watchlist, WatchlistViewModel watchlistViewModel1) {
         this.watchlists = watchlist;
+        watchlistViewModel = watchlistViewModel1;
     }
 
     //This method creates a new view holder that is constructed with a new View, inflated from a layout
@@ -84,20 +91,49 @@ public class WatchlistRecyclerViewAdapter extends RecyclerView.Adapter<Watchlist
         tvReleaseDate.setText(new SimpleDateFormat("dd-MM-yyyy").format(watchlist.getReleaseDate()));
         TextView tvWatchDate = viewHolder.tvWatchDateTime;
         tvWatchDate.setText(new SimpleDateFormat("dd-MM-yyyy hh:mm:ss").format(watchlist.getWatchDateTime()));
-        viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+
+        viewHolder.btnView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Intent intent = new Intent(context, MovieViewActivity.class);
+                Bundle bundle = new Bundle();
+                Movie movie = new Movie();
+                movie.setMovieID(watchlist.getMovieID());
+                movie.setMovieName(watchlist.getMovieName());
+                movie.setReleaseDate(watchlist.getReleaseDate());
+                bundle.putParcelable("selectedMovie", movie);
+                intent.putExtras(bundle);
+                context.startActivity(intent);
 
             }
         });
 
+        viewHolder.btnDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                builder.setTitle("Delete");
+                builder.setMessage("You are about to delete " + watchlist.getMovieName() +" from your watchlist. Do you really want to proceed?");
+                builder.setCancelable(false);
+                builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        watchlistViewModel.delete(watchlist);
+                        Toast.makeText(context, "Watchlist was successfully deleted", Toast.LENGTH_SHORT).show();
+                    }
+                });
 
-    }
+                builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Toast.makeText(context, "Delete cancelled", Toast.LENGTH_SHORT).show();
+                    }
+                });
 
-    public Watchlist getSelected() {
-        if (checkedPosition != -1) {
-            return watchlists.get(checkedPosition);
-        }
-        return null;
+                builder.show();
+            }
+        });
+
+
     }
 }

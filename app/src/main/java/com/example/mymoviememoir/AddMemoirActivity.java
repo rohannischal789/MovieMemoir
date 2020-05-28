@@ -4,7 +4,9 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
@@ -61,7 +63,7 @@ public class AddMemoirActivity extends AppCompatActivity {
             networkConnection = new NetworkConnection();
             etMovieName.setText(movie.getMovieName());
             etMovieName.setEnabled(false);
-            etReleaseDate.setText(new SimpleDateFormat("dd-MM-yyyy").format(movie.getReleaseDate()));
+            etReleaseDate.setText(new SimpleDateFormat("dd/MM/yyyy").format(movie.getReleaseDate()));
             etReleaseDate.setEnabled(false);
             String fullPath = "https://image.tmdb.org/t/p/w500/" + movie.getMoviePoster();
             Picasso.get()
@@ -111,7 +113,7 @@ public class AddMemoirActivity extends AppCompatActivity {
                     mTimePicker = new TimePickerDialog(AddMemoirActivity.this, new TimePickerDialog.OnTimeSetListener() {
                         @Override
                         public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
-                            etWatchTime.setText( selectedHour + ":" + selectedMinute);
+                            etWatchTime.setText(selectedHour + ":" + selectedMinute);
                         }
                     }, hour, minute, true);//Yes 24 hour time
                     mTimePicker.setTitle("Select Time");
@@ -133,10 +135,53 @@ public class AddMemoirActivity extends AppCompatActivity {
                 }
             });
 
+            Button btnSubmit = findViewById(R.id.btnSubmit);
+            btnSubmit.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String movieName = etMovieName.getText().toString();
+                    String releaseDate = etReleaseDate.getText().toString();
+                    String watchDate = etWatchDate.getText().toString();
+                    String watchTime = etWatchTime.getText().toString();
+                    String comment = etComment.getText().toString();
+                    long selectedSpinner = cinemaSpinner.getSelectedItemId();
+                    String cinemaID = String.valueOf(cinemas.get((int) selectedSpinner).getCinemaId());
+                    String rating = String.valueOf(ratingMemoir.getRating());
+                    SharedPreferences sharedPref = getSharedPreferences("data", Context.MODE_PRIVATE);
+                    int personID = sharedPref.getInt("personID",0);
+                    if (!movieName.isEmpty() && !releaseDate.isEmpty() && !watchDate.isEmpty() && !watchTime.isEmpty() && !comment.isEmpty() && !cinemaID.isEmpty()
+                            && !rating.isEmpty()) {
+                        AddMemoir addMemoir = new AddMemoir();
+                        addMemoir.execute(movieName,releaseDate,watchDate,watchTime,comment,rating,cinemaID,String.valueOf(personID));
+
+                    } else {
+                        Toast.makeText(getApplicationContext(), "Please enter all the values", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+
+        } catch (Exception e) {
+            Toast.makeText(getApplicationContext(), e.toString(), Toast.LENGTH_SHORT);
         }
-        catch (Exception e)
-        {
-            Toast.makeText(getApplicationContext(),e.toString(),Toast.LENGTH_SHORT);
+    }
+
+    private class AddMemoir extends AsyncTask<String, Void, Boolean> {
+
+        @Override
+        protected Boolean doInBackground(String... params) {
+            return networkConnection.addMemoir(params[0], params[1], params[2], params[3], params[4], params[5], params[6], params[7]);
+        }
+
+        @Override
+        protected void onPostExecute(Boolean details) {
+            if (details) {
+                Toast.makeText(getApplicationContext(), "Memoir added", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(getApplicationContext(), "Memoir adding failed", Toast.LENGTH_SHORT).show();
+            }
+            //TextView resultTextView = findViewById(R.id.tvCheck);
+            //resultTextView.setText(details);
+            //Todo: save in shared preferences if all good
         }
     }
 
@@ -162,7 +207,7 @@ public class AddMemoirActivity extends AppCompatActivity {
             }
 
             ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(),
-                    android.R.layout.simple_spinner_item, list );
+                    android.R.layout.simple_spinner_item, list);
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             cinemaSpinner.setAdapter(adapter);
 
