@@ -5,11 +5,13 @@ import android.util.Log;
 import com.example.mymoviememoir.entity.Cinema;
 import com.example.mymoviememoir.entity.Credential;
 import com.example.mymoviememoir.entity.Memoir;
+import com.example.mymoviememoir.entity.MemoirDetail;
 import com.example.mymoviememoir.entity.Person;
 import com.example.mymoviememoir.model.Movie;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -23,6 +25,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import okhttp3.MediaType;
@@ -47,6 +50,7 @@ public class NetworkConnection {
     private static final String MOVIE_SEARCH_URL = "https://api.themoviedb.org/3/search/movie?api_key=d6e8c114ba9fd0c52689305746305a3b&language=en-US&include_adult=false&query=";
     private static String MOVIE_CREDIT_URL = "https://api.themoviedb.org/3/movie/{movie_id}/credits?api_key=d6e8c114ba9fd0c52689305746305a3b";
     private static String MOVIE_DETAILS_URL = "https://api.themoviedb.org/3/movie/{movie_id}?api_key=d6e8c114ba9fd0c52689305746305a3b&language=en-US";
+    private static String GENRE_URL = "https://api.themoviedb.org/3/genre/movie/list?api_key=d6e8c114ba9fd0c52689305746305a3b&language=en-US";
 
     public String verifyUser(String username, String password) {
         final String methodPath = "restmovie.credential/findByUsername/" + username;
@@ -495,7 +499,7 @@ public class NetworkConnection {
         return isExistingCinema;
     }
 
-    public boolean addMemoir(String moviename, String moviereleasedate, String watchdate, String watchtime, String comment, String starrating, String cinemaid,  String personid) {
+    public boolean addMemoir(String moviename, String moviereleasedate, String watchdate, String watchtime, String comment, String starrating, String cinemaid, String personid) {
 
         Boolean isAdded = false;
         try {
@@ -505,11 +509,11 @@ public class NetworkConnection {
             releaseDate = new SimpleDateFormat("dd/MM/yyyy").parse(moviereleasedate);
 
             Date watchDateTime = null;
-            watchDateTime = new SimpleDateFormat("dd/MM/yyyyHH:mm").parse(watchdate+ watchtime);
+            watchDateTime = new SimpleDateFormat("dd/MM/yyyyHH:mm").parse(watchdate + watchtime);
 
-            Memoir Memoir = new Memoir(maxMemoirID, moviename, releaseDate, watchDateTime, comment,Double.valueOf(starrating));
-            Memoir.setCinemaId(Integer.valueOf( cinemaid));
-            int credentialID = getCredentialID(Integer.valueOf( personid));
+            Memoir Memoir = new Memoir(maxMemoirID, moviename, releaseDate, watchDateTime, comment, Double.valueOf(starrating));
+            Memoir.setCinemaId(Integer.valueOf(cinemaid));
+            int credentialID = getCredentialID(Integer.valueOf(personid));
             Memoir.setCredentialId(credentialID);
             Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss").create();
             //RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint(API_BASE_URL).setConverter(new GsonConverter.create(gson)).build();
@@ -555,18 +559,134 @@ public class NetworkConnection {
         return num;
     }
 
-    /*
 
-                    String releaseDate = currMovie.getString("release_date");
-                    String overview = currMovie.getString("overview");
-                    Date date= null;
+    public MemoirDetail findByMovieNameAndYear(String movieName, String year) {
+        Request.Builder builder = new Request.Builder();
+        builder.url(MOVIE_SEARCH_URL + movieName + "&primary_release_year=" + Integer.valueOf(year));
+        Request request = builder.build();
+        JSONArray array = new JSONArray();
+        MemoirDetail mem = new MemoirDetail();
+        HashMap<Integer, String> genreMap = getAllGenres();
+        JSONObject jsonResponse = new JSONObject();
+        try {
+            Response response = client.newCall(request).execute();
+            results = response.body().string();
+            jsonResponse = new JSONObject(results);
+
+            if (results.equals("[]")) {
+                //results = "Incorrect username";
+            } else {
+                JSONArray movies = null;
+                try {
+                    movies = jsonResponse.getJSONArray("results");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                JSONObject currMovie = movies.getJSONObject(0);
+                String poster_path = currMovie.getString("poster_path");
+                Double publicRating = currMovie.getDouble("vote_average");
+                int movieID = currMovie.getInt("id");
+                ArrayList<String> genreList = new ArrayList<>();
+                JSONArray genres = currMovie.getJSONArray("genre_ids");
+                for (int i = 0; i < genres.length(); i++) {
+                    String value = genreMap.get(genres.getInt(i));
+                    genreList.add(value);
+                }
+                mem = new MemoirDetail(movieID, publicRating, poster_path, genreList);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return mem;
+    }
+
+    public HashMap<Integer, String> getAllGenres() {
+        Request.Builder builder = new Request.Builder();
+        builder.url(GENRE_URL);
+        HashMap<Integer, String> hmap = new HashMap<Integer, String>();
+        Request request = builder.build();
+        JSONObject jsonResponse = new JSONObject();
+        try {
+            Response response = client.newCall(request).execute();
+            results = response.body().string();
+            jsonResponse = new JSONObject(results);
+
+            if (results.equals("[]")) {
+                //results = "Incorrect username";
+            } else {
+                JSONArray genres = null;
+                genres = jsonResponse.getJSONArray("genres");
+                for (int i = 0; i < genres.length(); i++) {
+                    JSONObject currGenre = null;
+                    currGenre = genres.getJSONObject(i);
+                    int id = currGenre.getInt("id");
+                    String name = currGenre.getString("name");
+                    hmap.put(id,name);
+                }
+
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return hmap;
+    }
+
+    public List<MemoirDetail> getMemoirs(int personID) {
+        final String methodPath = "restmovie.memoir/findByPersonID/" + personID;
+        Request.Builder builder = new Request.Builder();
+        builder.url(BASE_URL + methodPath);
+        Request request = builder.build();
+        ArrayList<MemoirDetail> memArr = new ArrayList<MemoirDetail>();
+        JSONArray jsonResponse;
+        try {
+            Response response = client.newCall(request).execute();
+            results = response.body().string();
+            jsonResponse = new JSONArray(results);
+
+            if (results.equals("[]")) {
+                //results = "Incorrect username";
+            } else {
+                for (int i = 0; i < jsonResponse.length(); i++) {
+                    JSONObject currMem = null;
+                    currMem = jsonResponse.getJSONObject(i);
+                    int memID = currMem.getInt("memoirid");
+
+                    // movie name, the release date, an image (from Google or any other API), and the date that the user watched it, cinema suburb/postcode, user comment/memory, and the user’s rating score as stars.
+                    String movieName = currMem.getString("moviename");
+                    String releaseDate = currMem.getString("moviereleasedate");
+                    String watchDate = currMem.getString("watchdatetime");
+
+                    String comment = currMem.getString("comment");
+                    JSONObject cinema = currMem.getJSONObject("cinemaid");
+                    String postcode = cinema.getString("postcode");
+
+                    Date relDate = null;
                     try {
-                        date = new SimpleDateFormat("yyyy-MM-dd").parse(releaseDate);
+                        relDate = new SimpleDateFormat("yyyy-MM-dd").parse(releaseDate);
                     } catch (ParseException e) {
                         e.printStackTrace();
                     }
-                    String posterPath = currMovie.getString("poster_path");
-                    int movieID = currMovie.getInt("id");
-                    moviesArr.add(new Movie(movieID,name,date,posterPath,overview));
-     */
+
+                    Date watDate = null;
+                    try {
+                        watDate = new SimpleDateFormat("yyyy-MM-dd").parse(watchDate);
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                    Double starrating = currMem.getDouble("starrating");
+
+                    MemoirDetail mem = findByMovieNameAndYear(movieName, String.valueOf(relDate.getYear() + 1900));
+                    memArr.add(new MemoirDetail(memID, movieName, relDate, watDate, comment, starrating, mem.getMovieId(), mem.getPublicRating(), mem.getPosterPath(), mem.getGenres(), postcode));
+
+                }
+
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return memArr;
+    }
 }

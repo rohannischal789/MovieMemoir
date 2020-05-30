@@ -12,4 +12,9 @@
     </string-array>
     <string name="Open">open</string>
     <string name="Close">close</string>
+    <string-array name="sorting_array">
+        <item>Watch Date</item>
+        <item>User Rating</item>
+        <item>Public Rating</item>
+    </string-array>
 </resources>

@@ -12,6 +12,8 @@ public class Memoir {
     private Cinema cinemaid;
     private Credential credentialid;
 
+    public Memoir(){}
+
     public Memoir(Integer memoirid, String moviename, Date moviereleasedate, Date watchdatetime, String comment, Double starrating) {
         this.memoirid = memoirid;
         this.moviename = moviename;
@@ -88,6 +90,11 @@ public class Memoir {
     public void setCinemaId(int cinemaid) {
         this.cinemaid = new Cinema();
         this.cinemaid.setCinemaId(cinemaid);
+    }
+
+    public void setCinemaPostcode(String postcode) {
+        this.cinemaid = new Cinema();
+        this.cinemaid.setPostcode(postcode);
     }
 
     public void setCredentialId(int credentialId) {
