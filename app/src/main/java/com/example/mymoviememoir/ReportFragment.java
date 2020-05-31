@@ -26,6 +26,7 @@ import com.example.mymoviememoir.networkconnection.NetworkConnection;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Description;
+import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
@@ -115,7 +116,7 @@ public class ReportFragment extends Fragment {
 
         chart = view.findViewById(R.id.barchart);
         pieChart = view.findViewById(R.id.pieChart);
-
+        pieChart.setNoDataText("Enter the dates to view the pie chart");
 
         /*pieDataSet.setSliceSpace(2f);
         pieDataSet.setValueTextColor(Color.WHITE);
@@ -227,6 +228,10 @@ public class ReportFragment extends Fragment {
                     labels.add(mov.getWatchedMonth());
                     i++;
                 }
+                XAxis xAxis = chart.getXAxis();
+                chart.getXAxis().setGranularityEnabled(true);
+                chart.getAxisLeft().setGranularity(1f);
+                xAxis.setLabelCount(labels.size(), false);
                 chart.getXAxis().setValueFormatter(new IndexAxisValueFormatter(labels));
 
                 BarDataSet bardataset = new BarDataSet(data, "Watched Movies Per Month");
@@ -238,6 +243,7 @@ public class ReportFragment extends Fragment {
             }
             else
             {
+                chart.setNoDataText("No data for selection.");
                 Toast.makeText(getActivity(), "No data for bar chart for the entered start and end date. Kindly change the values and try again" ,Toast.LENGTH_SHORT).show();
             }
         }
