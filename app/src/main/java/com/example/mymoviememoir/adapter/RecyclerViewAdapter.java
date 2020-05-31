@@ -76,7 +76,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter
         TextView tvMovieName = viewHolder.tvMovieName;
         tvMovieName.setText(movie.getMovieName());
         TextView tvReleaseYear = viewHolder.tvReleaseYear;
-        tvReleaseYear.setText((Integer.toString(movie.getReleaseYear())));
+        String value = movie.getReleaseYear() !=0 ? Integer.toString(movie.getReleaseYear()) : "Unknown";
+        tvReleaseYear.setText(value);
         ImageView imageView = viewHolder.imageView;
         String fullPath = "https://image.tmdb.org/t/p/w500/" + movie.getMoviePoster();
         Picasso.get()

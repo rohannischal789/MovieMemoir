@@ -31,6 +31,7 @@ public class MovieSearchFragment extends Fragment {
     private Button btnSearch;
     private List<Movie> movies;
     private RecyclerViewAdapter adapter;
+    private TextView emptyView;
 
     private TextView textView;
     private NetworkConnection networkConnection;
@@ -42,9 +43,11 @@ public class MovieSearchFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the View for this fragment
         View view = inflater.inflate(R.layout.movie_search_fragment, container, false);
+        ((MainActivity)getActivity()).setActionBarTitle("Movie Search");
         recyclerView = view.findViewById(R.id.recyclerView);
         networkConnection = new NetworkConnection();
         movies = new ArrayList<Movie>();
+        emptyView = view.findViewById(R.id.empty_view);
 
         etMovieName = view.findViewById(R.id.etMovieName);
         btnSearch = view.findViewById(R.id.btnSearch);
@@ -56,6 +59,8 @@ public class MovieSearchFragment extends Fragment {
                     findMovieByName movieByName = new findMovieByName();
                     movieByName.execute(movieName);
 
+                }else {
+                    Toast.makeText(getActivity().getApplicationContext(), "Please enter a value to search", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -72,15 +77,18 @@ public class MovieSearchFragment extends Fragment {
 
         @Override
         protected void onPostExecute(List<Movie> details) {
-
-            adapter = new RecyclerViewAdapter(details);
-            recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(),LinearLayoutManager.VERTICAL));
-            recyclerView.setAdapter(adapter);
-            layoutManager = new LinearLayoutManager(getActivity());
-            recyclerView.setLayoutManager(layoutManager);
-            //TextView resultTextView = findViewById(R.id.tvCheck);
-            //resultTextView.setText(details);
-            //Todo: save in shared preferences if all good
+            if (details.size() > 0) {
+                recyclerView.setVisibility(View.VISIBLE);
+                emptyView.setVisibility(View.GONE);
+                adapter = new RecyclerViewAdapter(details);
+                recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), LinearLayoutManager.VERTICAL));
+                recyclerView.setAdapter(adapter);
+                layoutManager = new LinearLayoutManager(getActivity());
+                recyclerView.setLayoutManager(layoutManager);
+            }else {
+                recyclerView.setVisibility(View.GONE);
+                emptyView.setVisibility(View.VISIBLE);
+            }
         }
     }
 }

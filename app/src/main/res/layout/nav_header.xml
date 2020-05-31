@@ -9,5 +9,5 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="15dp"
         android:layout_marginBottom="15dp"
-        android:background="@mipmap/ic_launcher_round" />
+        android:background="@drawable/cinema" />
 </LinearLayout>

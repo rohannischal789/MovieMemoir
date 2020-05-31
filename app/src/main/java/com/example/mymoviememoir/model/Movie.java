@@ -122,7 +122,7 @@ public class Movie implements Parcelable {
     }
 
     public int getReleaseYear() {
-        return releaseDate.getYear() + 1900;
+        return releaseDate!=null ? (releaseDate.getYear() + 1900) : 0;
     }
 
     public void setMoviePoster(String moviePoster) {

@@ -75,6 +75,10 @@ public class MainActivity extends AppCompatActivity  implements
         return super.onOptionsItemSelected(item);
     }
 
+    public void setActionBarTitle(String title) {
+        getSupportActionBar().setTitle(title);
+    }
+
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();

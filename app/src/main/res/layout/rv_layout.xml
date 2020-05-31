@@ -1,7 +1,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="10dp">
 
 
     <androidx.cardview.widget.CardView
@@ -22,12 +23,15 @@
         <TextView
             android:id="@+id/tvMovieName1"
             android:layout_width="0dp"
+            android:layout_marginLeft="5dp"
+            android:textSize="15dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             />
         <TextView
             android:id="@+id/tvReleaseYear"
             android:layout_width="0dp"
+            android:textSize="15dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             />

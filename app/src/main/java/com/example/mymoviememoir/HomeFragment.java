@@ -44,6 +44,7 @@ public class HomeFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the View for this fragment
         View view = inflater.inflate(R.layout.home_fragment, container, false);
+        ((MainActivity)getActivity()).setActionBarTitle("Home");
         recyclerView = view.findViewById(R.id.recyclerViewTop5);
         networkConnection = new NetworkConnection();
         movies = new ArrayList<Movie>();
