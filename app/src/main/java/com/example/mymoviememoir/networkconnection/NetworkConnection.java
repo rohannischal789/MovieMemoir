@@ -3,9 +3,11 @@ package com.example.mymoviememoir.networkconnection;
 import android.util.Log;
 
 import com.example.mymoviememoir.entity.Cinema;
+import com.example.mymoviememoir.entity.CinemaMovie;
 import com.example.mymoviememoir.entity.Credential;
 import com.example.mymoviememoir.entity.Memoir;
 import com.example.mymoviememoir.entity.MemoirDetail;
+import com.example.mymoviememoir.entity.MonthMovie;
 import com.example.mymoviememoir.entity.Person;
 import com.example.mymoviememoir.model.Movie;
 import com.google.gson.Gson;
@@ -622,7 +624,7 @@ public class NetworkConnection {
                     currGenre = genres.getJSONObject(i);
                     int id = currGenre.getInt("id");
                     String name = currGenre.getString("name");
-                    hmap.put(id,name);
+                    hmap.put(id, name);
                 }
 
             }
@@ -689,4 +691,73 @@ public class NetworkConnection {
         }
         return memArr;
     }
+
+    public List<CinemaMovie> getMoviesWatchedPerPostcode(String personID, String startDate, String endDate) {
+        ArrayList<CinemaMovie> data = new ArrayList<>();
+        try {
+            Date sDate = null;
+            sDate = new SimpleDateFormat("dd/MM/yyyy").parse(startDate);
+
+            Date eDate = null;
+            eDate = new SimpleDateFormat("dd/MM/yyyy").parse(endDate);
+
+            final String methodPath = "restmovie.memoir/findWatchedMovieCountByPostcode/" + personID + "/" + startDate + "/" + endDate;
+            Request.Builder builder = new Request.Builder();
+            builder.url(BASE_URL + methodPath);
+            Request request = builder.build();
+            JSONArray jsonResponse;
+            Response response = client.newCall(request).execute();
+            results = response.body().string();
+            jsonResponse = new JSONArray(results);
+
+            if (results.equals("[]")) {
+                //results = "Incorrect username";
+            } else {
+                for (int i = 0; i < jsonResponse.length(); i++) {
+                    JSONObject currMem = null;
+                    currMem = jsonResponse.getJSONObject(i);
+                    int watchedMovieCount = currMem.getInt("watchedMovieCount");
+                    String cinemaPostCode = currMem.getString("cinemaPostCode");
+                    data.add(new CinemaMovie(cinemaPostCode,watchedMovieCount));
+                }
+
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return data;
+    }
+
+    public List<MonthMovie> getWatchedMoviesPerMonth(String personID, String year) {
+        ArrayList<MonthMovie> data = new ArrayList<>();
+        try {
+            final String methodPath = "restmovie.memoir/findWatchedMoviesPerMonth/" + personID + "/" + year;
+            Request.Builder builder = new Request.Builder();
+            builder.url(BASE_URL + methodPath);
+            Request request = builder.build();
+            JSONArray jsonResponse;
+            Response response = client.newCall(request).execute();
+            results = response.body().string();
+            jsonResponse = new JSONArray(results);
+
+            if (results.equals("[]")) {
+                //results = "Incorrect username";
+            } else {
+                for (int i = 0; i < jsonResponse.length(); i++) {
+                    JSONObject currMem = null;
+                    currMem = jsonResponse.getJSONObject(i);
+                    int watchedMovieCount = currMem.getInt("watchedMovieCount");
+                    String watchMonth = currMem.getString("watchMonth");
+                    data.add(new MonthMovie(watchMonth, watchedMovieCount));
+                }
+
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return data;
+    }
 }
+
