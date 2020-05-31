@@ -695,12 +695,6 @@ public class NetworkConnection {
     public List<CinemaMovie> getMoviesWatchedPerPostcode(String personID, String startDate, String endDate) {
         ArrayList<CinemaMovie> data = new ArrayList<>();
         try {
-            Date sDate = null;
-            sDate = new SimpleDateFormat("dd/MM/yyyy").parse(startDate);
-
-            Date eDate = null;
-            eDate = new SimpleDateFormat("dd/MM/yyyy").parse(endDate);
-
             final String methodPath = "restmovie.memoir/findWatchedMovieCountByPostcode/" + personID + "/" + startDate + "/" + endDate;
             Request.Builder builder = new Request.Builder();
             builder.url(BASE_URL + methodPath);

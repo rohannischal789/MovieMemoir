@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.RadioButton;
@@ -50,14 +51,13 @@ public class ReportFragment extends Fragment {
     Spinner spinnerYear;
     PieChart pieChart;
     BarChart chart;
-
+    Button btnSearch;
 
     PieData pieData;
     PieDataSet pieDataSet;
     List<PieEntry> pieEntries;
     ArrayList PieEntryLabels;
 
-    int[] colors = new int[]{Color.LTGRAY,Color.BLACK,Color.BLUE,Color.GREEN,Color.YELLOW};
     public ReportFragment() {
         // Required empty public constructor
     }
@@ -76,8 +76,26 @@ public class ReportFragment extends Fragment {
         spinnerYear = view.findViewById(R.id.spinnerYear);
 
         initializeDatePicker(etEndDate);
+
         SharedPreferences sharedPref = getActivity().getSharedPreferences("data", Context.MODE_PRIVATE);
         final int personID = sharedPref.getInt("personID", 0);
+
+        btnSearch = view.findViewById(R.id.btnSearch);
+        btnSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String startDate = etStartDate.getText().toString().trim();
+                String endDate = etEndDate.getText().toString().trim();
+                if (!startDate.isEmpty() && !endDate.isEmpty()) {
+                    GetMoviesWatchedPerPostcode getMoviesWatchedPerPostcode = new GetMoviesWatchedPerPostcode();
+                    getMoviesWatchedPerPostcode.execute(String.valueOf(personID),startDate,endDate);
+                }
+                else
+                {
+                    Toast.makeText(getActivity(), "Please enter start and end date before searching" ,Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
 
         spinnerYear.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -95,17 +113,9 @@ public class ReportFragment extends Fragment {
         });
 
         chart = view.findViewById(R.id.barchart);
-
         pieChart = view.findViewById(R.id.pieChart);
-        getEntries();
-        Description desc = new Description();
-        desc.setText("ABC");
-        pieDataSet = new PieDataSet(pieEntries, "PPPP");
-        pieChart.setUsePercentValues(true);
-        pieData = new PieData(pieDataSet);
-        pieDataSet.setColors(ColorTemplate.JOYFUL_COLORS);
-        pieChart.setData(pieData);
-        pieChart.invalidate();
+
+
         /*pieDataSet.setSliceSpace(2f);
         pieDataSet.setValueTextColor(Color.WHITE);
         pieDataSet.setValueTextSize(10f);
@@ -132,16 +142,6 @@ public class ReportFragment extends Fragment {
         pieChart.invalidate();*/
 
         return view;
-    }
-
-    private void getEntries() {
-        pieEntries = new ArrayList<>();
-        pieEntries.add(new PieEntry(2, "A"));
-        pieEntries.add(new PieEntry(4, "B"));
-        pieEntries.add(new PieEntry(6, "C"));
-        pieEntries.add(new PieEntry(8, "D"));
-        pieEntries.add(new PieEntry(7, "E"));
-        pieEntries.add(new PieEntry(3, "F"));
     }
 
     private void initializeDatePicker(final EditText edt) {
@@ -172,7 +172,7 @@ public class ReportFragment extends Fragment {
     }
 
     private void updateLabel(EditText edt) {
-        String myFormat = "dd/MM/yyyy";
+        String myFormat = "dd-MM-yyyy";
         SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.ENGLISH);
         edt.setText(sdf.format(myCalendar.getTime()));
     }
@@ -186,7 +186,24 @@ public class ReportFragment extends Fragment {
 
         @Override
         protected void onPostExecute(List<CinemaMovie> result) {
-
+            pieEntries = new ArrayList<>();
+            if(result.size() >0) {
+                for (CinemaMovie cin : result) {
+                    pieEntries.add(new PieEntry(cin.getMoviesWatched(), cin.getPostcode()));
+                }
+                Description desc = new Description();
+                desc.setText("Movies Watched Per Postcode");
+                pieDataSet = new PieDataSet(pieEntries, "aaa");
+                pieChart.setUsePercentValues(true);
+                pieData = new PieData(pieDataSet);
+                pieDataSet.setColors(ColorTemplate.JOYFUL_COLORS);
+                pieChart.setData(pieData);
+                pieChart.invalidate();
+            }
+            else
+            {
+                Toast.makeText(getActivity(), "No data for pie chart for the entered start and end date. Kindly change the values and try again" ,Toast.LENGTH_SHORT).show();
+            }
 
         }
     }
@@ -203,19 +220,25 @@ public class ReportFragment extends Fragment {
             ArrayList<BarEntry> data = new ArrayList();
             ArrayList<String> labels = new ArrayList<>();
             int i = 0;
-            for (MonthMovie mov:result) {
-                data.add(new BarEntry(i,mov.getCount()));
-                labels.add(mov.getWatchedMonth());
-                i++;
+            if(result.size()>0) {
+                for (MonthMovie mov : result) {
+                    data.add(new BarEntry(i, mov.getCount()));
+                    labels.add(mov.getWatchedMonth());
+                    i++;
+                }
+                chart.getXAxis().setValueFormatter(new IndexAxisValueFormatter(labels));
+
+                BarDataSet bardataset = new BarDataSet(data, "Watched Movies Per Month");
+                chart.animateY(5000);
+
+                bardataset.setColors(ColorTemplate.COLORFUL_COLORS);
+                BarData barData = new BarData(bardataset);
+                chart.setData(barData);
             }
-            chart.getXAxis().setValueFormatter(new IndexAxisValueFormatter(labels));
-
-            BarDataSet bardataset = new BarDataSet(data, "Watched Movies Per Month");
-            chart.animateY(5000);
-
-            bardataset.setColors(ColorTemplate.COLORFUL_COLORS);
-            BarData barData = new BarData(bardataset);
-            chart.setData(barData);
+            else
+            {
+                Toast.makeText(getActivity(), "No data for bar chart for the entered start and end date. Kindly change the values and try again" ,Toast.LENGTH_SHORT).show();
+            }
         }
     }
 }

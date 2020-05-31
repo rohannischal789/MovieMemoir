@@ -73,7 +73,6 @@ public class MovieSearchFragment extends Fragment {
         @Override
         protected void onPostExecute(List<Movie> details) {
 
-            Toast.makeText(getActivity(), "Movies searched" ,Toast.LENGTH_SHORT).show();
             adapter = new RecyclerViewAdapter(details);
             recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(),LinearLayoutManager.VERTICAL));
             recyclerView.setAdapter(adapter);

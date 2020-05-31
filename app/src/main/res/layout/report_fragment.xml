@@ -1,84 +1,86 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
-
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginBottom="115dp"
-        android:maxLength="30"
-        android:text="Start Date"
-        app:layout_constraintBottom_toTopOf="@+id/barchart"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:orientation="horizontal">
 
-    <EditText
-        android:id="@+id/etStartDate"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:clickable="true"
-        android:focusable="false"
-        app:layout_constraintStart_toStartOf="@+id/textView"
-        app:layout_constraintTop_toBottomOf="@+id/textView" />
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginBottom="64dp"
+            android:maxLength="30"
+            android:text="Start Date" />
 
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="80dp"
-        android:layout_marginRight="80dp"
-        android:text="End Date"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        <EditText
+            android:id="@+id/etStartDate"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:focusable="false" />
 
-    <EditText
-        android:id="@+id/etEndDate"
-        android:layout_width="wrap_content"
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="End Date" />
+
+        <EditText
+            android:id="@+id/etEndDate"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:focusable="false" />
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/btnSearch"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:clickable="true"
-        android:focusable="false"
-        app:layout_constraintStart_toStartOf="@+id/textView2"
-        app:layout_constraintTop_toBottomOf="@+id/textView2" />
+        android:layout_marginTop="20dp"
+        android:text="Search" />
 
     <com.github.mikephil.charting.charts.PieChart
         android:id="@+id/pieChart"
-        android:layout_margin="16dp"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView">
+        android:layout_margin="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginBottom="266dp">
 
     </com.github.mikephil.charting.charts.PieChart>
-
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="#c0c0c0"/>
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Choose Year:" />
     <Spinner
         android:id="@+id/spinnerYear"
-        android:layout_margin="16dp"
-        android:layout_width="0dp"
-        android:entries="@array/year_array"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/barchart" />
+        android:layout_margin="16dp"
+        android:layout_marginTop="10dp"
+        android:entries="@array/year_array" />
 
     <com.github.mikephil.charting.charts.BarChart
         android:id="@+id/barchart"
         android:layout_width="match_parent"
         android:layout_height="400dp"
-        android:layout_margin="16dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView">
+        android:layout_margin="16dp">
 
     </com.github.mikephil.charting.charts.BarChart>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>
