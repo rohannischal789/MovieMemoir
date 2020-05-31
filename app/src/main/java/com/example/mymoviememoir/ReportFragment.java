@@ -24,6 +24,7 @@ import com.example.mymoviememoir.entity.MonthMovie;
 import com.example.mymoviememoir.networkconnection.NetworkConnection;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
@@ -53,7 +54,7 @@ public class ReportFragment extends Fragment {
 
     PieData pieData;
     PieDataSet pieDataSet;
-    ArrayList pieEntries;
+    List<PieEntry> pieEntries;
     ArrayList PieEntryLabels;
 
     int[] colors = new int[]{Color.LTGRAY,Color.BLACK,Color.BLUE,Color.GREEN,Color.YELLOW};
@@ -95,15 +96,17 @@ public class ReportFragment extends Fragment {
 
         chart = view.findViewById(R.id.barchart);
 
-
-
-        /*pieChart = view.findViewById(R.id.pieChart);
+        pieChart = view.findViewById(R.id.pieChart);
         getEntries();
-        pieDataSet = new PieDataSet(pieEntries, "");
+        Description desc = new Description();
+        desc.setText("ABC");
+        pieDataSet = new PieDataSet(pieEntries, "PPPP");
+        pieChart.setUsePercentValues(true);
         pieData = new PieData(pieDataSet);
-        pieChart.setData(pieData);
         pieDataSet.setColors(ColorTemplate.JOYFUL_COLORS);
-        pieDataSet.setSliceSpace(2f);
+        pieChart.setData(pieData);
+        pieChart.invalidate();
+        /*pieDataSet.setSliceSpace(2f);
         pieDataSet.setValueTextColor(Color.WHITE);
         pieDataSet.setValueTextSize(10f);
         pieDataSet.setSliceSpace(5f);*/
@@ -133,12 +136,12 @@ public class ReportFragment extends Fragment {
 
     private void getEntries() {
         pieEntries = new ArrayList<>();
-        pieEntries.add(new PieEntry(2f, 0));
-        pieEntries.add(new PieEntry(4f, 1));
-        pieEntries.add(new PieEntry(6f, 2));
-        pieEntries.add(new PieEntry(8f, 3));
-        pieEntries.add(new PieEntry(7f, 4));
-        pieEntries.add(new PieEntry(3f, 5));
+        pieEntries.add(new PieEntry(2, "A"));
+        pieEntries.add(new PieEntry(4, "B"));
+        pieEntries.add(new PieEntry(6, "C"));
+        pieEntries.add(new PieEntry(8, "D"));
+        pieEntries.add(new PieEntry(7, "E"));
+        pieEntries.add(new PieEntry(3, "F"));
     }
 
     private void initializeDatePicker(final EditText edt) {

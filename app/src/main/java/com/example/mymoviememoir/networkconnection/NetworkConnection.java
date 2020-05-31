@@ -759,5 +759,29 @@ public class NetworkConnection {
         }
         return data;
     }
+
+    public Person getPersonByID(int personID) {
+        final String methodPath = "restmovie.person/" + personID;
+        Request.Builder builder = new Request.Builder();
+        builder.url(BASE_URL + methodPath);
+        Request request = builder.build();
+        Person person = new Person();
+        JSONObject object;
+        try {
+            Response response = client.newCall(request).execute();
+            results = response.body().string();
+            object = new JSONObject(results);
+            if (results.equals("[]")) {
+                results = "Incorrect username";
+            } else {
+                person.setFirstname(object.getString("firstname"));
+                person.setAddress(object.getString("address"));
+                person.setPersonid(personID);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return person;
+    }
 }
 
