@@ -3,81 +3,83 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    android:paddingBottom="20dp">
 
     <TextView
         android:id="@+id/tvComment"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="11dp"
-        android:layout_marginLeft="11dp"
-        android:layout_marginTop="32dp"
-        android:layout_marginBottom="31dp"
+        android:layout_marginTop="19dp"
+        android:layout_marginBottom="20dp"
         android:text="TextView"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/ratingBar6"
-        app:layout_constraintTop_toTopOf="@+id/tvWatchDate6" />
+        app:layout_constraintStart_toStartOf="@+id/tvReleaseDate6"
+        app:layout_constraintTop_toBottomOf="@+id/tvReleaseDate6" />
 
     <ImageView
         android:id="@+id/imgMoviePoster"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="5dp"
-        android:layout_marginLeft="5dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        android:layout_marginStart="37dp"
+        android:layout_marginLeft="37dp"
+        android:layout_marginBottom="19dp"
+        app:layout_constraintBottom_toTopOf="@+id/ratingBar6"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/tvMovieName6"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="2dp"
-        android:layout_marginLeft="2dp"
-        android:layout_marginTop="9dp"
+        android:layout_marginStart="139dp"
+        android:layout_marginLeft="139dp"
+        android:layout_marginTop="16dp"
         android:text="TextView"
-        app:layout_constraintStart_toStartOf="@+id/tvWatchDate6"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/tvReleaseDate6"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        android:layout_marginEnd="60dp"
-        android:layout_marginRight="60dp"
+        android:layout_marginTop="48dp"
         android:text="TextView"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/tvMovieName6"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/tvWatchDate6"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="13dp"
+        android:layout_marginEnd="43dp"
+        android:layout_marginRight="43dp"
         android:text="TextView"
-        app:layout_constraintStart_toStartOf="@+id/tvComment"
-        app:layout_constraintTop_toBottomOf="@+id/tvMovieName6" />
+        app:layout_constraintBottom_toBottomOf="@+id/tvMovieName6"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/tvMovieName6" />
 
     <TextView
         android:id="@+id/tvCinemaPostcode"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
         android:text="TextView"
-        app:layout_constraintStart_toStartOf="@+id/tvReleaseDate6"
-        app:layout_constraintTop_toBottomOf="@+id/tvReleaseDate6" />
+        app:layout_constraintBottom_toBottomOf="@+id/tvReleaseDate6"
+        app:layout_constraintStart_toStartOf="@+id/tvWatchDate6"
+        app:layout_constraintTop_toTopOf="@+id/tvReleaseDate6" />
 
     <RatingBar
         android:id="@+id/ratingBar6"
-        android:layout_width="240dp"
-        android:layout_height="0dp"
-        android:layout_marginTop="3dp"
-        android:layout_marginEnd="48dp"
-        android:layout_marginRight="48dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvComment"
+        style="?android:attr/ratingBarStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="7dp"
+        android:layout_marginLeft="7dp"
+        android:layout_marginBottom="6dp"
         android:layout_weight="1"
         android:numStars="5"
-        android:stepSize="0.5" />
+        android:stepSize="0.5"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imgMoviePoster" />
 </androidx.constraintlayout.widget.ConstraintLayout>

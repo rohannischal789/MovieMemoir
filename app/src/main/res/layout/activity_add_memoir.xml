@@ -2,7 +2,8 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/scroll"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:layout_marginBottom="10dp">
     <LinearLayout
         android:orientation="vertical" android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -15,32 +16,32 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
+            android:layout_marginLeft="100dp"
             android:maxLength="30"
             android:layout_marginTop="10dp"
             android:text="Movie Name"/>
         <EditText
             android:id="@+id/etMovieName7"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:inputType="none"
-            android:layout_marginLeft="10dp"/>
+            android:layout_marginLeft="100dp"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Release Date"
             android:maxLength="30"
-            android:layout_marginLeft="10dp" />
+            android:layout_marginLeft="100dp" />
         <EditText
             android:id="@+id/etReleaseDate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
+            android:layout_marginLeft="100dp"
             android:inputType="none"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
+            android:layout_marginLeft="100dp"
             android:text="Watch Date"/>
         <EditText
             android:id="@+id/etWatchDate"
@@ -48,11 +49,11 @@
             android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:focusable="false"
-            android:layout_marginLeft="10dp"/>
+            android:layout_marginLeft="100dp"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
+            android:layout_marginLeft="100dp"
             android:text="Watch Time"/>
         <EditText
             android:id="@+id/etWatchTime"
@@ -60,58 +61,62 @@
             android:focusable="false"
             android:layout_width="200dp"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"/>
+            android:layout_marginLeft="100dp"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
+            android:layout_marginLeft="100dp"
             android:layout_marginTop="5dp"
             android:text="Cinema"/>
         <Spinner
             android:id="@+id/cinemaSpinner"
             android:layout_width="200dp"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
+            android:layout_marginLeft="100dp"
             android:layout_marginTop="5dp"/>
         <Button
             android:id="@+id/btnAddCinema1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
+            android:background="@color/colorAccent"
+            android:textColor="@android:color/white"
+            android:layout_gravity="center"
             android:layout_marginTop="5dp"
             android:text="Add new cinema?"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
+            android:layout_marginLeft="100dp"
             android:layout_marginTop="10dp"
             android:text="Comment"/>
         <EditText
             android:id="@+id/etComment"
             android:layout_width="200dp"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"/>
+            android:layout_marginLeft="100dp"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Rating"
-            android:layout_marginLeft="10dp"
+            android:layout_marginLeft="100dp"
             android:maxLength="30" />
         <RatingBar
             android:id="@+id/ratingMemoir"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:layout_marginLeft="10dp"
+            android:layout_marginLeft="100dp"
             android:numStars="5"/>
 
         <Button
             android:id="@+id/btnSubmit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="@color/colorPrimary"
+            android:textColor="@android:color/white"
             android:layout_marginTop="30dp"
-            android:layout_marginLeft="10dp"
+            android:layout_gravity="center"
             android:text="Submit"/>
     </LinearLayout>
 </ScrollView>

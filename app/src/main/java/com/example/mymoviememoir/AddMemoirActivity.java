@@ -50,6 +50,7 @@ public class AddMemoirActivity extends AppCompatActivity {
         try {
             super.onCreate(savedInstanceState);
             setContentView(R.layout.activity_add_memoir);
+            getSupportActionBar().setTitle("Add Memoir");
             Bundle bundle = getIntent().getExtras();
             final Movie movie = bundle.getParcelable("selectedMovie");
             etMovieName = findViewById(R.id.etMovieName7);
@@ -113,7 +114,12 @@ public class AddMemoirActivity extends AppCompatActivity {
                     mTimePicker = new TimePickerDialog(AddMemoirActivity.this, new TimePickerDialog.OnTimeSetListener() {
                         @Override
                         public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
-                            etWatchTime.setText(selectedHour + ":" + selectedMinute);
+                            String separator = ":";
+                            if(selectedMinute <10)
+                            {
+                                separator = ":0";
+                            }
+                            etWatchTime.setText(selectedHour + separator + selectedMinute);
                         }
                     }, hour, minute, true);//Yes 24 hour time
                     mTimePicker.setTitle("Select Time");

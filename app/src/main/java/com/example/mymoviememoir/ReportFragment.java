@@ -67,6 +67,7 @@ public class ReportFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the View for this fragment
         View view = inflater.inflate(R.layout.report_fragment, container, false);
+        ((MainActivity)getActivity()).setActionBarTitle("Report");
         networkConnection = new NetworkConnection();
 
         etStartDate = view.findViewById(R.id.etStartDate);

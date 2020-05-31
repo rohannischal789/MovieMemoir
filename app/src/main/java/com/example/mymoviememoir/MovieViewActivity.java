@@ -50,6 +50,7 @@ public class MovieViewActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_view);
+        getSupportActionBar().setTitle("Movie View");
         Bundle bundle = getIntent().getExtras();
         final Movie movie = bundle.getParcelable("selectedMovie");
         movie.setGenres(new ArrayList<String>());

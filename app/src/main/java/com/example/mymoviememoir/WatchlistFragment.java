@@ -40,6 +40,7 @@ public class WatchlistFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the View for this fragment
         final View view = inflater.inflate(R.layout.watchlist_fragment, container, false);
+        ((MainActivity)getActivity()).setActionBarTitle("Watchlist");
         SharedPreferences sharedPref = getActivity().getSharedPreferences("data", Context.MODE_PRIVATE);
         final int personID = sharedPref.getInt("personID",0);
 

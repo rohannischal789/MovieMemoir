@@ -49,6 +49,7 @@ public class MapFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the View for this fragment
         mView = inflater.inflate(R.layout.map_fragment, container, false);
+        ((MainActivity)getActivity()).setActionBarTitle("Map");
         mMapView = mView.findViewById(R.id.mapView);
         locations = new ArrayList<>();
         mMapView.onCreate(savedInstanceState);

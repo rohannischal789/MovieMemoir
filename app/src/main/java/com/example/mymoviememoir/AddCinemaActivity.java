@@ -27,6 +27,7 @@ public class AddCinemaActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_cinema);
+        getSupportActionBar().setTitle("Add New Cinema");
         etCinemaName = findViewById(R.id.etCinemaName2);
         etPostcode = findViewById(R.id.etPostcode2);
         Bundle bundle = getIntent().getExtras();
