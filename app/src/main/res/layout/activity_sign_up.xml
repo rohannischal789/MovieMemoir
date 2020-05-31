@@ -20,7 +20,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="100dp"
-        android:maxLength="30"
         android:layout_marginTop="40dp"
         android:text="First Name"/>
     <EditText
@@ -28,19 +27,20 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="100dp"
+        android:maxLength="30"
         android:ems="10"/>
     <TextView
         android:id="@+id/tvSurname"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Surname"
-        android:maxLength="30"
         android:layout_marginLeft="100dp" />
     <EditText
         android:id="@+id/etSurname"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="100dp"
+        android:maxLength="30"
         android:ems="10" />
 
     <TextView
@@ -53,7 +53,6 @@
         android:id="@+id/radiogroup"
         android:layout_width="match_parent"
         android:layout_height="match_parent" >
-
         <RadioButton
             android:text="Male"
             android:layout_width="wrap_content"
@@ -68,7 +67,6 @@
             android:id="@+id/radio1"
             android:layout_marginLeft="100dp"
             android:layout_height="wrap_content" />
-
     </RadioGroup>
 
     <TextView
@@ -137,7 +135,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="100dp"
-        android:maxLength="50"
+        android:maxLength="40"
         android:ems="10"/>
     <TextView
         android:id="@+id/tvPassword"
@@ -158,8 +156,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="30dp"
+        android:background="@color/colorAccent"
+        android:textColor="@android:color/white"
         android:text="Register"
-        android:layout_gravity="center"/>
+        android:layout_gravity="center"
+        android:layout_marginBottom="10dp"/>
 
 </LinearLayout>
 </ScrollView>

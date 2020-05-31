@@ -104,9 +104,6 @@ public class SignInActivity extends AppCompatActivity {
             } catch (NumberFormatException e) {
                 Toast.makeText(getApplicationContext(), details ,Toast.LENGTH_SHORT).show();
             }
-            //TextView resultTextView = findViewById(R.id.tvCheck);
-            //resultTextView.setText(details);
-            //Todo: save in shared preferences if all good
         }
     }
 }
