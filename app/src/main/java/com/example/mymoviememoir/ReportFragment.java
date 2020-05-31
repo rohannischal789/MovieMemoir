@@ -50,14 +50,15 @@ public class ReportFragment extends Fragment {
     EditText etStartDate;
     EditText etEndDate;
     Spinner spinnerYear;
-    PieChart pieChart;
-    BarChart chart;
     Button btnSearch;
 
+
+    BarChart chart;
+
+    PieChart pieChart;
     PieData pieData;
     PieDataSet pieDataSet;
     List<PieEntry> pieEntries;
-    ArrayList PieEntryLabels;
 
     public ReportFragment() {
         // Required empty public constructor
@@ -115,33 +116,10 @@ public class ReportFragment extends Fragment {
         });
 
         chart = view.findViewById(R.id.barchart);
-        pieChart = view.findViewById(R.id.pieChart);
+
+
+        pieChart = view.findViewById(R.id.pieChart1);
         pieChart.setNoDataText("Enter the dates to view the pie chart");
-
-        /*pieDataSet.setSliceSpace(2f);
-        pieDataSet.setValueTextColor(Color.WHITE);
-        pieDataSet.setValueTextSize(10f);
-        pieDataSet.setSliceSpace(5f);*/
-        /*pieChart = view.findViewById(R.id.pieChart);
-        //pieChart.setUsePercentValues(true);
-        ArrayList<PieEntry> yvalues = new ArrayList<PieEntry>();
-        yvalues.add(new PieEntry(8, "Test1"));
-        yvalues.add(new PieEntry(15, "Test2"));
-        yvalues.add(new PieEntry(12, "Test3"));
-        yvalues.add(new PieEntry(25, "Test4"));
-        yvalues.add(new PieEntry(23, "Test5"));
-        yvalues.add(new PieEntry(17, "Test6"));
-
-        PieDataSet dataSet = new PieDataSet(yvalues, "");
-        dataSet.setColors(colors);
-
-        PieData data = new PieData(dataSet);
-        // In Percentage term
-        //data.setValueFormatter(new PercentFormatter());
-        // Default value
-        //data.setValueFormatter(new DefaultValueFormatter(0));
-        pieChart.setData(data);
-        pieChart.invalidate();*/
 
         return view;
     }
@@ -188,17 +166,26 @@ public class ReportFragment extends Fragment {
 
         @Override
         protected void onPostExecute(List<CinemaMovie> result) {
+            List<PieEntry> pieEntries = new ArrayList<>();
+
             pieEntries = new ArrayList<>();
             if(result.size() >0) {
+                int totalCount = 0;
                 for (CinemaMovie cin : result) {
-                    pieEntries.add(new PieEntry(cin.getMoviesWatched(), cin.getPostcode()));
+                    totalCount += cin.getMoviesWatched();
+                }
+                for (CinemaMovie cin : result) {
+                    float value = ((float) cin.getMoviesWatched()/(float)totalCount);
+                    pieEntries.add(new PieEntry(value, cin.getPostcode()));
                 }
                 Description desc = new Description();
                 desc.setText("Movies Watched Per Postcode");
-                pieDataSet = new PieDataSet(pieEntries, "aaa");
+                pieDataSet = new PieDataSet(pieEntries, "Post code");
                 pieChart.setUsePercentValues(true);
                 pieData = new PieData(pieDataSet);
-                pieDataSet.setColors(ColorTemplate.JOYFUL_COLORS);
+                pieData.setValueTextSize(20f);
+                pieData.setValueFormatter(new PercentFormatter(pieChart));
+                pieDataSet.setColors(ColorTemplate.COLORFUL_COLORS);
                 pieChart.setData(pieData);
                 pieChart.invalidate();
             }
@@ -235,7 +222,7 @@ public class ReportFragment extends Fragment {
                 chart.getXAxis().setValueFormatter(new IndexAxisValueFormatter(labels));
 
                 BarDataSet bardataset = new BarDataSet(data, "Watched Movies Per Month");
-                chart.animateY(5000);
+                chart.animateY(2000);
 
                 bardataset.setColors(ColorTemplate.COLORFUL_COLORS);
                 BarData barData = new BarData(bardataset);
