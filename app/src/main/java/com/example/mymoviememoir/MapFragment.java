@@ -168,7 +168,7 @@ public class MapFragment extends Fragment {
                             float zoomLevel = (float) 10.0;
                             googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentlocation, zoomLevel));
                         } else {
-                            googleMap.addMarker(new MarkerOptions().position(currentlocation).title(details.get(i).getName() + ", " + details.get(i).getPostcode()).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
+                            googleMap.addMarker(new MarkerOptions().position(currentlocation).title(details.get(i).getName()).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
                         }
                         i++;
                     }
